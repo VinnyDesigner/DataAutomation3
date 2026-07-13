@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowRight,
   Check,
@@ -46,6 +46,10 @@ function Login() {
   const [caps, setCaps] = useState(false);
   const [loading, setLoading] = useState<"idle" | "loading" | "success">("idle");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", "dark");
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,11 +136,11 @@ function Login() {
               transition={{ duration: 0.8, delay: 0.15 }}
               className="mt-5 text-[24px] font-bold leading-[1.1] tracking-[-0.02em] sm:text-[28px] lg:text-[30px] xl:text-[36px]"
             >
-              <span className="text-primary">Orchestrate.</span>{" "}
-              <span className="text-success">Govern.</span>{" "}
-              <span className="text-info">Monitor.</span>
+              <span className="text-primary">Automate,</span>{" "}
+              <span className="text-success">Monitor,</span>{" "}
+              <span className="text-info">and Govern</span>
               <br />
-              <span className="text-foreground">Enterprise Data.</span>
+              <span className="text-foreground">Enterprise Data Workflows</span>
             </motion.h1>
 
             <motion.p
