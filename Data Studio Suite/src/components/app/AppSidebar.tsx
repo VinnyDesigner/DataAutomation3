@@ -52,7 +52,7 @@ export function AppSidebar() {
               src={headerLogo}
               alt="Abu Dhabi Spatial Data"
               className={cn(
-                "h-auto w-auto max-w-[180px] object-contain group-data-[collapsible=icon]:hidden",
+                "h-auto w-auto max-w-[190px] object-contain group-data-[collapsible=icon]:hidden",
                 !isLight && "sidebar-logo",
               )}
             />

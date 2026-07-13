@@ -91,7 +91,7 @@ function Login() {
           <img
             src="/SDI White.png"
             alt="Abu Dhabi Spatial Data"
-            className="h-7 w-auto shrink-0 object-contain opacity-90 sm:h-9 lg:h-10"
+            className="h-10 w-auto shrink-0 object-contain opacity-90 sm:h-14 lg:h-16"
           />
         </motion.header>
 
