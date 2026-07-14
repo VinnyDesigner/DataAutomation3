@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Activity,
   Briefcase,
@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Surface } from "@/components/app/Surface";
+import { TablePagination } from "@/components/app/TablePagination";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/operations/jobs")({
@@ -71,6 +72,36 @@ function toneBg(t: string) {
 function JobsPage() {
   const [flow, setFlow] = useState("All");
   const [status, setStatus] = useState("All");
+  const [query, setQuery] = useState("");
+
+  const filteredJobs = useMemo(() => {
+    return jobs.filter((j) => {
+      if (flow !== "All" && j.flow !== flow) return false;
+      if (status !== "All" && j.status !== status) return false;
+      if (query) {
+        const q = query.toLowerCase();
+        if (
+          !j.delivery.toLowerCase().includes(q) &&
+          !j.subtitle.toLowerCase().includes(q) &&
+          !j.entityCode.toLowerCase().includes(q)
+        )
+          return false;
+      }
+      return true;
+    });
+  }, [flow, status, query]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [flow, status, query]);
+
+  const paginatedJobs = useMemo(() => {
+    return filteredJobs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  }, [filteredJobs, currentPage, pageSize]);
   return (
     <div className="space-y-6">
       <PageHeader
@@ -97,6 +128,8 @@ function JobsPage() {
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by code or entity..."
               className="h-10 w-full rounded-lg border border-border/60 bg-card/50 pl-10 pr-3 text-[14px] text-foreground placeholder:text-muted-foreground focus:border-accent/50 focus:outline-none"
             />
@@ -106,7 +139,7 @@ function JobsPage() {
           <button className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-card/60 text-muted-foreground transition hover:text-foreground">
             <RefreshCw className="h-4 w-4" />
           </button>
-          <span className="text-[16px] text-muted-foreground">1 of 1</span>
+          <span className="text-[16px] text-muted-foreground">{currentPage} of {Math.max(1, Math.ceil(filteredJobs.length / pageSize))}</span>
         </div>
       </Surface>
 
@@ -127,7 +160,7 @@ function JobsPage() {
               </tr>
             </thead>
             <tbody>
-              {jobs.map((j) => (
+              {paginatedJobs.map((j) => (
                 <tr key={j.delivery} className="border-b border-border/40 last:border-0 hover:bg-foreground/[0.02]">
                   <Td>
                     <div className="flex items-center gap-3">
@@ -211,13 +244,15 @@ function JobsPage() {
             </tbody>
           </table>
         </div>
-        <div className="flex items-center justify-between border-t border-border/60 px-5 py-3 text-[16px] text-muted-foreground">
-          <span>Page 1 of 1 · 1 delivery</span>
-          <div className="flex items-center gap-2">
-            <button className="rounded-md border border-border/60 bg-card/60 px-3 py-1.5 text-foreground/70 hover:text-foreground">Prev</button>
-            <button className="rounded-md border border-border/60 bg-card/60 px-3 py-1.5 text-foreground/70 hover:text-foreground">Next</button>
-          </div>
-        </div>
+        <TablePagination
+          totalItems={filteredJobs.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={setPageSize}
+          itemNameSingular="job"
+          itemNamePlural="jobs"
+        />
       </Surface>
     </div>
   );

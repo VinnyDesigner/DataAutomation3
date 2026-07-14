@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   CheckCircle2,
   ChevronDown,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Surface } from "@/components/app/Surface";
+import { TablePagination } from "@/components/app/TablePagination";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/data-management/layers")({
@@ -44,6 +46,7 @@ const columns = [
 ];
 
 function LayersPage() {
+  const [pageSize, setPageSize] = useState(10);
   return (
     <div className="space-y-6">
       <PageHeader
@@ -131,14 +134,15 @@ function LayersPage() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between border-t border-border/60 px-5 py-3 text-[16px] text-muted-foreground">
-          <span>Showing 0 of 0 layers</span>
-          <div className="flex items-center gap-2">
-            <button className="rounded-md border border-border/60 bg-card/60 px-3 py-1.5">Previous</button>
-            <button className="rounded-md bg-accent/20 px-3 py-1.5 text-accent ring-1 ring-inset ring-accent/40">1</button>
-            <button className="rounded-md border border-border/60 bg-card/60 px-3 py-1.5">Next</button>
-          </div>
-        </div>
+        <TablePagination
+          totalItems={0}
+          pageSize={pageSize}
+          currentPage={1}
+          onPageChange={() => {}}
+          onPageSizeChange={setPageSize}
+          itemNameSingular="layer"
+          itemNamePlural="layers"
+        />
       </Surface>
     </div>
   );

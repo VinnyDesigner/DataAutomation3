@@ -162,19 +162,19 @@ function Dashboard() {
           </>
         )}
 
-        <div className="relative flex flex-col gap-6 p-6">
-          <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+        <div className="relative flex flex-col gap-3 py-3 px-6">
+          <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
             <div className="min-w-0 flex-1">
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-1 text-[16px] font-medium text-success ring-1 ring-inset ring-success/25">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2 py-0.5 text-[12px] font-medium text-success ring-1 ring-inset ring-success/25">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" /> SYSTEM OPERATIONAL
               </div>
-              <h1 className="mt-3 break-words text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">Data Automation Studio</h1>
-              <p className="mt-2 text-[15px] font-medium text-foreground/50 lg:text-[16px]">Jul 9, 2026 · Platform overview &amp; live health</p>
+              <h1 className="mt-1 break-words text-xl font-bold tracking-tight text-foreground sm:text-2xl lg:text-3xl">Data Automation Studio</h1>
+              <p className="mt-0.5 text-[13px] font-medium text-foreground/50 lg:text-[14px]">Jul 9, 2026 · Platform overview &amp; live health</p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 xl:shrink-0">
+            <div className="flex flex-wrap items-center gap-1.5 xl:shrink-0">
               <button className={cn(
-                "group relative inline-flex items-center gap-1.5 overflow-hidden rounded-lg px-4 py-2.5 text-[14px] font-semibold transition-all hover:-translate-y-px",
+                "group relative inline-flex items-center gap-1.5 overflow-hidden rounded-lg px-3.5 py-1.5 text-[13px] font-semibold transition-all hover:-translate-y-px",
                 isLight
                   ? "bg-linear-to-r from-[#8b5cf6] to-[#7c3aed] text-white shadow-[0_8px_24px_-6px_rgba(124,58,237,0.35)] ring-1 ring-inset ring-white/20 hover:shadow-[0_10px_30px_-6px_rgba(124,58,237,0.45)]"
                   : "bg-linear-to-r from-[#a855f7] to-[#7c3aed] text-white shadow-[0_8px_24px_-6px_rgba(168,85,247,0.6)] ring-1 ring-inset ring-white/15 hover:shadow-[0_10px_30px_-6px_rgba(168,85,247,0.75)]"
@@ -183,20 +183,20 @@ function Dashboard() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/70 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
                 </span>
-                <Activity className="h-4 w-4" /> Live Monitor
+                <Activity className="h-3.5 w-3.5" /> Live Monitor
               </button>
               <button className={cn(
-                "inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[14px] font-medium transition-all",
+                "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[13px] font-medium transition-all",
                 isLight
                   ? "border-border/60 bg-white/70 text-foreground/70 hover:border-[#a855f7]/30 hover:bg-white hover:text-foreground"
                   : "border-border/60 bg-card/60 text-foreground/70 hover:border-[#a855f7]/40 hover:text-foreground"
               )}>
-                <RefreshCw className="h-4 w-4" /> Refresh
+                <RefreshCw className="h-3.5 w-3.5" /> Refresh
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 lg:gap-8">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-6">
             <InlineMetric label="Records today" value="2.4M" hint="↑ 12.3%" hintTone="success" />
             <InlineMetric label="Composite success" value="94.8%" hint="Composite" />
             <InlineMetric label="Avg cycle time" value="42m" hint="Per workflow" />
@@ -232,56 +232,52 @@ function Dashboard() {
           icon={<Layers className="h-4 w-4" />}
           label="Data Layers"
           value="0"
-          unit="registered"
+          unit="Registered"
           accent="info"
           chips={[
             { l: "0 active", tone: "success" },
             { l: "0 warn", tone: "warning" },
             { l: "0 error", tone: "danger" },
           ]}
-          footer={{ l: "All-time deliveries", v: "1" }}
           progress={0}
         />
         <ModuleCard
           icon={<Database className="h-4 w-4" />}
           label="Data Sources"
           value="0"
-          unit="sources"
+          unit="Sources"
           accent="primary"
           chips={[
             { l: "0 connected", tone: "success" },
             { l: "0 error", tone: "danger" },
             { l: "0 pending", tone: "warning" },
           ]}
-          footer={{ l: "Connection rate", v: "—" }}
           progress={0}
         />
         <ModuleCard
           icon={<Briefcase className="h-4 w-4" />}
           label="Jobs"
           value="47"
-          unit="this cycle"
+          unit="This Cycle"
           accent="secondary"
           chips={[
             { l: "31 done", tone: "success" },
             { l: "3 live", tone: "info" },
             { l: "4 fail", tone: "danger" },
           ]}
-          footer={{ l: "All-time processed", v: "5,218" }}
           progress={72}
         />
         <ModuleCard
           icon={<ShieldCheck className="h-4 w-4" />}
           label="Data Quality"
           value="94.8%"
-          unit="avg pass rate"
+          unit="Avg Pass Rate"
           accent="success"
           chips={[
             { l: "19 pass", tone: "success" },
             { l: "3 warn", tone: "warning" },
             { l: "2 fail", tone: "danger" },
           ]}
-          footer={{ l: "Rules evaluated", v: "24 rules" }}
           progress={94.8}
         />
       </div>
@@ -292,52 +288,48 @@ function Dashboard() {
           icon={<Database className="h-4 w-4" />}
           label="Registered Database Instances"
           value="2"
-          unit="instances"
+          unit="Instances"
           accent="success"
           chips={[
             { l: "2 with databases", tone: "success" },
             { l: "7 databases", tone: "info" },
             { l: "5 entities", tone: "secondary" },
           ]}
-          footer={{ l: "Databases registered", v: "7" }}
           progress={100}
         />
         <ModuleCard
           icon={<GitBranch className="h-4 w-4" />}
           label="Data Mapping"
           value="5"
-          unit="mappings"
+          unit="Mappings"
           accent="secondary"
           chips={[
             { l: "5 active", tone: "success" },
             { l: "1 instances", tone: "info" },
             { l: "5 entities", tone: "secondary" },
           ]}
-          footer={{ l: "Mapped entities", v: "5" }}
           progress={100}
         />
         <ModuleCard
           icon={<Users className="h-4 w-4" />}
           label="Entities"
           value="5"
-          unit="entities"
+          unit="Entities"
           accent="primary"
           chips={[{ l: "5 active", tone: "success" }]}
-          footer={{ l: "Deliveries this week", v: "47" }}
           progress={100}
         />
         <ModuleCard
           icon={<FileText className="h-4 w-4" />}
           label="Metadata Management"
           value="42"
-          unit="records"
+          unit="Records"
           accent="info"
           chips={[
             { l: "28 published", tone: "success" },
             { l: "5 review", tone: "warning" },
             { l: "3 errors", tone: "danger" },
           ]}
-          footer={{ l: "Avg completeness", v: "82%" }}
           progress={82}
         />
       </div>
@@ -608,11 +600,11 @@ function InlineMetric({
   const isLight = theme === "light";
   return (
     <div className="min-w-0">
-      <div className={`text-[32px] font-extrabold leading-none tracking-tight lg:text-[44px] ${isCount ? "text-danger" : "text-foreground"}`}>{value}</div>
-      <div className="mt-2 text-[13px] font-semibold tracking-wide text-foreground/60 lg:text-[14px]">{label}</div>
+      <div className={`text-[25px] font-extrabold leading-none tracking-tight lg:text-[32px] ${isCount ? "text-danger" : "text-foreground"}`}>{value}</div>
+      <div className="mt-1 text-[12px] font-semibold tracking-wide text-foreground/60 lg:text-[13px]">{label}</div>
       {hint && (
         <div
-          className={`mt-1 text-[13px] font-medium lg:text-[15px] ${
+          className={`mt-0.5 text-[11px] font-medium lg:text-[12px] ${
             hintTone === "success" ? "text-success" : hintTone === "danger" ? "text-danger" : "text-muted-foreground"
           }`}
         >
@@ -630,7 +622,6 @@ function ModuleCard({
   unit,
   accent,
   chips,
-  footer,
   progress,
 }: {
   icon: React.ReactNode;
@@ -639,7 +630,6 @@ function ModuleCard({
   unit: string;
   accent: "primary" | "success" | "warning" | "danger" | "info" | "secondary";
   chips: { l: string; tone: string }[];
-  footer: { l: string; v: string };
   progress: number;
 }) {
   const { theme } = useTheme();
@@ -678,7 +668,7 @@ function ModuleCard({
   };
   return (
     <div className={cn(
-      "group relative flex h-full flex-col overflow-hidden rounded-2xl p-5 transition-all hover:-translate-y-0.5",
+      "group relative flex h-full flex-col overflow-hidden rounded-2xl py-2.5 px-4 transition-all hover:-translate-y-0.5",
       isLight
         ? `glossy-card glossy-card--${accent}`
         : "border border-border/60 bg-card/60 shadow-card backdrop-blur-xl hover:border-accent/40 hover:shadow-elevated"
@@ -700,29 +690,25 @@ function ModuleCard({
         isLight ? "from-white/50" : tint[accent]
       )} />
       <div className="relative flex items-start justify-between">
-        <GlowCircle accent={accent} size="md">{icon}</GlowCircle>
+        <GlowCircle accent={accent} size="sm">{icon}</GlowCircle>
         <div className="text-right">
-          <div className="text-[34px] font-bold leading-none tracking-tight text-foreground lg:text-[40px]">{value}</div>
-          <div className="mt-1 text-[15px] tracking-wide text-muted-foreground lg:text-[16px]">{unit}</div>
+          <div className="text-[26px] font-bold leading-none tracking-tight text-foreground lg:text-[30px]">{value}</div>
+          <div className="mt-0.5 text-[13px] tracking-wide text-muted-foreground lg:text-[14px]">{unit}</div>
         </div>
       </div>
-      <div className="relative mt-4 text-[15px] font-semibold text-foreground/90 lg:text-[16px]">{label}</div>
-      <div className="relative mt-3 flex min-h-[54px] flex-wrap content-start gap-1.5">
+      <div className="relative mt-1.5 text-[13px] font-semibold text-foreground/90 lg:text-[14px]">{label}</div>
+      <div className="relative mt-1.5 flex min-h-[24px] flex-wrap content-start gap-1.5">
         {chips.map((c, i) => (
-          <span key={i} className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[14px] font-medium ring-1 ring-inset ${toneClass(c.tone)}`}>
+          <span key={i} className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[12px] font-medium ring-1 ring-inset ${toneClass(c.tone)}`}>
             <span className={`h-1 w-1 rounded-full ${toneDot(c.tone)}`} />
             {c.l}
           </span>
         ))}
       </div>
-      <div className="relative mt-auto pt-3">
-      <div className="relative mt-3 h-1 overflow-hidden rounded-full bg-foreground/5">
-        <div className={`h-full rounded-full bg-linear-to-r ${bar[accent]}`} style={{ width: `${Math.max(progress, 3)}%` }} />
-      </div>
-      <div className="relative mt-3 flex items-center justify-between border-t border-foreground/5 pt-3 text-[15px]">
-        <span className="text-muted-foreground">{footer.l}</span>
-        <span className="font-mono font-semibold text-foreground/90">{footer.v}</span>
-      </div>
+      <div className="relative mt-auto pt-0.5">
+        <div className="relative mt-1.5 h-1 overflow-hidden rounded-full bg-foreground/5">
+          <div className={`h-full rounded-full bg-linear-to-r ${bar[accent]}`} style={{ width: `${Math.max(progress, 3)}%` }} />
+        </div>
       </div>
     </div>
   );
@@ -757,20 +743,22 @@ function MiniStat({
   };
   return (
     <div className={cn(
-      "relative overflow-hidden rounded-xl p-3 transition-all hover:-translate-y-0.5",
+      "relative overflow-hidden rounded-xl py-2.5 px-3 transition-all hover:-translate-y-0.5",
       isLight
         ? `glossy-card glossy-card--${tone}`
         : "border border-border/60 bg-card/50 backdrop-blur-xl hover:border-accent/30"
     )}>
 
 
-      <div className="flex items-start justify-between">
-        <span className={`inline-flex h-6 w-6 items-center justify-center rounded-lg ring-1 ring-inset ${iconTone[tone]}`}>{i}</span>
-        {up !== undefined && <ArrowUpRight className={`h-3 w-3 ${up ? "text-success" : "text-danger rotate-90"}`} />}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className={`inline-flex h-6 w-6 items-center justify-center rounded-lg ring-1 ring-inset ${iconTone[tone]}`}>{i}</span>
+          <span className="text-[13px] font-semibold text-foreground/90 lg:text-[14px]">{l}</span>
+        </div>
+        {up !== undefined && <ArrowUpRight className={`h-3.5 w-3.5 ${up ? "text-success" : "text-danger rotate-90"}`} />}
       </div>
-      <div className="mt-2 text-[15px] tracking-wide text-muted-foreground lg:text-[16px]">{l}</div>
-      <div className="mt-0.5 text-[22px] font-bold leading-tight text-foreground lg:text-[26px]">{v}</div>
-      <div className="mt-0.5 text-[13px] leading-snug text-muted-foreground lg:text-[14px]">{h}</div>
+      <div className="mt-2 text-[20px] font-bold leading-none text-foreground lg:text-[24px]">{v}</div>
+      <div className="mt-1 text-[12px] leading-snug text-muted-foreground lg:text-[13px]">{h}</div>
     </div>
   );
 }

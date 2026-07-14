@@ -205,12 +205,6 @@
   --input: rgba(15, 23, 42, 0.14);
   --ring: #2563eb;
 
-  /* Sidebar */
-  --sidebar-foreground: #334155;
-  --sidebar-accent: rgba(37, 99, 235, 0.1);
-  --sidebar-accent-foreground: #0f172a;
-  --sidebar-border: rgba(15, 23, 42, 0.08);
-
   /* Ambient background (GradientOrbs) */
   --orb-base: #f1f5f9;
   --orb-blue-1: rgba(59, 130, 246, 0.08);
@@ -260,15 +254,6 @@
     0 20px 60px -20px rgba(37, 99, 235, 0.25);
   --shadow-soft: 0 8px 32px -12px rgba(15, 23, 42, 0.12);
 
-  /* Sidebar glass */
-  --sidebar-glass-from: rgba(255, 255, 255, 0.75);
-  --sidebar-glass-to: rgba(248, 250, 252, 0.9);
-  --sidebar-hover: rgba(15, 23, 42, 0.04);
-  --sidebar-active-edge: rgba(37, 99, 235, 0.18);
-  --sidebar-badge-bg: rgba(15, 23, 42, 0.06);
-  --sidebar-badge-border: rgba(15, 23, 42, 0.1);
-  --sidebar-footer-bg: rgba(15, 23, 42, 0.02);
-  --sidebar-shadow: 0 20px 60px -20px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .dark {
@@ -503,13 +488,6 @@
 [data-theme="light"] .bg-card\/50 { background-color: rgba(255, 255, 255, 0.88); }
 [data-theme="light"] .bg-card\/40 { background-color: rgba(255, 255, 255, 0.82); }
 
-/* Selected sidebar item: dark blue text in light theme so it stays readable
-   against the pale blue active pill. */
-[data-theme="light"] [data-sidebar="menu-button"][data-active="true"],
-[data-theme="light"] [data-sidebar="menu-button"][data-active="true"] * {
-  color: #0f172a;
-}
-
 /* ============================================================
    Glossy premium cards (light theme)
    Soft, solid white surface with gentle depth — no blue cast.
@@ -677,4 +655,50 @@
 .recharts-tooltip-item {
   font-family: var(--font-numeric);
   font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   Force sidebar and all its children to always resolve in
+   dark theme variables even when the page is in light theme.
+   ============================================================ */
+[data-sidebar="sidebar"] {
+  --background: #0e1828;
+  --surface: #142033;
+  --card: #18253c;
+  --card-foreground: #ffffff;
+  --elevated: #1d2d47;
+  --popover: #18253c;
+  --popover-foreground: #ffffff;
+  --foreground: #ffffff;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #5b8cff;
+
+  --muted: #17233a;
+  --muted-foreground: #94a3b8;
+  --text-muted: #64748b;
+
+  --sidebar: transparent;
+  --sidebar-foreground: #cbd5e1;
+  --sidebar-accent: rgba(91, 140, 255, 0.1);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+
+  --sidebar-glass-from: rgba(20, 26, 44, 0.85);
+  --sidebar-glass-to: rgba(12, 16, 28, 0.9);
+  --sidebar-hover: rgba(255, 255, 255, 0.04);
+  --sidebar-active-edge: rgba(12, 16, 28, 0.4);
+  --sidebar-badge-bg: rgba(255, 255, 255, 0.1);
+  --sidebar-badge-border: rgba(255, 255, 255, 0.15);
+  --sidebar-footer-bg: rgba(255, 255, 255, 0.02);
+  --sidebar-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-sidebar="sidebar"] .scrollbar-thin {
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+[data-sidebar="sidebar"] .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
 }

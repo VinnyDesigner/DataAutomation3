@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Activity,
   ArrowUpRight,
@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Surface } from "@/components/app/Surface";
+import { TablePagination } from "@/components/app/TablePagination";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/operations/manage-schedules")({
@@ -59,6 +60,36 @@ const tabs = ["All", "Active", "Inactive"];
 function ManageSchedulesPage() {
   const [tab, setTab] = useState("All");
   const [view, setView] = useState<"grid" | "list">("list");
+  const [query, setQuery] = useState("");
+
+  const filteredSchedules = useMemo(() => {
+    return schedules.filter((s) => {
+      if (tab !== "All" && s.status !== tab) return false;
+      if (query) {
+        const q = query.toLowerCase();
+        if (
+          !s.name.toLowerCase().includes(q) &&
+          !s.entity.toLowerCase().includes(q) &&
+          !s.tool.toLowerCase().includes(q) &&
+          !s.id.toLowerCase().includes(q)
+        )
+          return false;
+      }
+      return true;
+    });
+  }, [tab, query]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [tab, query]);
+
+  const paginatedSchedules = useMemo(() => {
+    return filteredSchedules.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  }, [filteredSchedules, currentPage, pageSize]);
 
   return (
     <div className="space-y-6">
@@ -101,6 +132,8 @@ function ManageSchedulesPage() {
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by name, tool, entity or ID..."
               className="h-10 w-full rounded-lg border border-border/60 bg-card/50 pl-10 pr-3 text-[14px] text-foreground placeholder:text-muted-foreground focus:border-accent/50 focus:outline-none"
             />
@@ -122,7 +155,9 @@ function ManageSchedulesPage() {
           <button className="inline-flex h-10 items-center gap-2 rounded-lg border border-border/60 bg-card/60 px-3 text-[14px] font-medium text-foreground/80">
             All Frequencies <ChevronDown className="h-4 w-4 opacity-70" />
           </button>
-          <span className="text-[16px] text-muted-foreground">1 schedule</span>
+          <span className="text-[16px] text-muted-foreground">
+            {filteredSchedules.length} {filteredSchedules.length === 1 ? "schedule" : "schedules"}
+          </span>
           <div className="inline-flex items-center rounded-lg border border-border/60 bg-card/40 p-1">
             <button
               onClick={() => setView("grid")}
@@ -154,7 +189,7 @@ function ManageSchedulesPage() {
               </tr>
             </thead>
             <tbody>
-              {schedules.map((s) => (
+              {paginatedSchedules.map((s) => (
                 <tr key={s.name} className="border-b border-border/40 last:border-0 hover:bg-foreground/[0.02]">
                   <td className="px-5 py-4"><input type="checkbox" className="rounded border-border/60 bg-card/60 accent-accent" /></td>
                   <td className="px-5 py-4">
@@ -192,20 +227,15 @@ function ManageSchedulesPage() {
           </table>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/60 px-5 py-3 text-[16px] text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <span>Rows per page</span>
-            <button className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-card/60 px-2 py-1">
-              10 <ChevronDown className="h-3 w-3" />
-            </button>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="rounded-md border border-border/60 bg-card/60 px-3 py-1.5">Previous</button>
-            <button className="rounded-md bg-accent/20 px-3 py-1.5 text-accent ring-1 ring-inset ring-accent/40">1</button>
-            <span>of 1</span>
-            <button className="rounded-md border border-border/60 bg-card/60 px-3 py-1.5">Next</button>
-          </div>
-        </div>
+        <TablePagination
+          totalItems={filteredSchedules.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={setPageSize}
+          itemNameSingular="schedule"
+          itemNamePlural="schedules"
+        />
       </Surface>
     </div>
   );

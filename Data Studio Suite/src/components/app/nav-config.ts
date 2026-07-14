@@ -123,6 +123,7 @@ export const navGroups: NavGroup[] = [
     items: [
       { title: "Data Quality", url: "/quality/monitor", icon: ShieldAlert },
       { title: "Quality Rules", url: "/quality/rules", icon: ListChecks },
+      { title: "Rule Enforcement", url: "/quality/enforcement", icon: Shield },
     ],
   },
   {

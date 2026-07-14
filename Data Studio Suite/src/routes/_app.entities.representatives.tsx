@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState, useMemo, useEffect } from "react";
 import { Download, Filter, Plus, Search, SlidersHorizontal, Pencil, Trash2, Eye } from "lucide-react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Surface } from "@/components/app/Surface";
+import { TablePagination } from "@/components/app/TablePagination";
 
 export const Route = createFileRoute("/_app/entities/representatives")({
   head: () => ({
@@ -20,6 +22,39 @@ const rows = [
 
 
 function RepsPage() {
+  const [query, setQuery] = useState("");
+
+  const filteredRows = useMemo(() => {
+    return rows.filter((r) => {
+      if (query) {
+        const q = query.toLowerCase();
+        if (
+          !r.name.toLowerCase().includes(q) &&
+          !r.username.toLowerCase().includes(q) &&
+          !r.role.toLowerCase().includes(q) &&
+          !r.email.toLowerCase().includes(q) &&
+          !r.phone.toLowerCase().includes(q) &&
+          !r.dept.toLowerCase().includes(q) &&
+          !r.entity.toLowerCase().includes(q)
+        )
+          return false;
+      }
+      return true;
+    });
+  }, [query]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query]);
+
+  const paginatedRows = useMemo(() => {
+    return filteredRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  }, [filteredRows, currentPage, pageSize]);
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -36,6 +71,8 @@ function RepsPage() {
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search name, username, email, entity, role…"
               className="w-full rounded-lg border border-border/60 bg-foreground/[0.02] py-2 pl-9 pr-3 text-[16px] text-foreground placeholder:text-muted-foreground focus:border-accent/50 focus:outline-none"
             />
@@ -44,11 +81,11 @@ function RepsPage() {
             <button className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-2 text-[15px] text-foreground/80"><Filter className="h-3.5 w-3.5" /> All Entities</button>
             <div className="flex overflow-hidden rounded-lg border border-border/60">
               <button className="bg-primary/20 px-2.5 py-2 text-[15px] font-medium text-accent">All</button>
-              <button className="border-l border-border/60 px-2.5 py-2 text-[15px] text-foreground/80"><span className="inline-block h-1.5 w-1.5 rounded-full bg-success" /> Active <span className="text-muted-foreground">(2)</span></button>
+              <button className="border-l border-border/60 px-2.5 py-2 text-[15px] text-foreground/80"><span className="inline-block h-1.5 w-1.5 rounded-full bg-success" /> Active <span className="text-muted-foreground">({filteredRows.length})</span></button>
               <button className="border-l border-border/60 px-2.5 py-2 text-[15px] text-foreground/80"><span className="inline-block h-1.5 w-1.5 rounded-full bg-muted-foreground/60" /> Disabled <span className="text-muted-foreground">(0)</span></button>
             </div>
             <button className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-2 text-[15px] text-foreground/80"><SlidersHorizontal className="h-3.5 w-3.5" /> Columns</button>
-            <button className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-2 text-[15px] text-foreground/80"><Download className="h-3.5 w-3.5" /> Export all <span className="rounded-md bg-primary/20 px-1.5 text-[14px] text-accent">2</span></button>
+            <button className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-2 text-[15px] text-foreground/80"><Download className="h-3.5 w-3.5" /> Export all <span className="rounded-md bg-primary/20 px-1.5 text-[14px] text-accent">{filteredRows.length}</span></button>
           </div>
         </div>
 
@@ -68,7 +105,7 @@ function RepsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
-              {rows.map((r) => (
+              {paginatedRows.map((r) => (
                 <tr key={r.username} className="group transition-colors hover:bg-foreground/[0.02]">
                   <td className="py-3 pl-4"><input type="checkbox" className="h-3.5 w-3.5 rounded border-foreground/20 bg-foreground/5" /></td>
                   <td className="py-3 pr-4">
@@ -106,15 +143,15 @@ function RepsPage() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between border-t border-border/60 px-4 py-3 text-[15px] text-muted-foreground">
-          <span>Rows per page <span className="ml-2 rounded-md bg-foreground/5 px-2 py-0.5 text-foreground/80">10</span> · 2 active · 0 disabled</span>
-          <div className="flex items-center gap-1">
-            <button className="rounded-md px-2 py-1 hover:bg-foreground/5">Previous</button>
-            <button className="rounded-md bg-primary/20 px-2 py-1 font-medium text-accent">1</button>
-            <span>of 1</span>
-            <button className="rounded-md px-2 py-1 hover:bg-foreground/5">Next</button>
-          </div>
-        </div>
+        <TablePagination
+          totalItems={filteredRows.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={setPageSize}
+          itemNameSingular="representative"
+          itemNamePlural="representatives"
+        />
       </Surface>
     </div>
   );

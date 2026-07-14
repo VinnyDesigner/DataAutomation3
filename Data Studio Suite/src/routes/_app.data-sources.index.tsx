@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Database, Layers, Plus, Search, Table2 } from "lucide-react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { StatCard, Surface } from "@/components/app/Surface";
+import { TablePagination } from "@/components/app/TablePagination";
 
 export const Route = createFileRoute("/_app/data-sources/")({
   head: () => ({
@@ -14,6 +16,7 @@ export const Route = createFileRoute("/_app/data-sources/")({
 });
 
 function DataSources() {
+  const [pageSize, setPageSize] = useState(10);
   return (
     <div className="space-y-6">
       <PageHeader
@@ -74,15 +77,15 @@ function DataSources() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-border/60 px-4 py-3 text-[15px] text-muted-foreground">
-          <span>Rows per page <span className="ml-2 rounded-md bg-foreground/5 px-2 py-0.5 text-foreground/80">10</span></span>
-          <div className="flex items-center gap-1">
-            <button className="rounded-md px-2 py-1">Previous</button>
-            <button className="rounded-md bg-primary/20 px-2 py-1 font-medium text-accent">1</button>
-            <span>of 1</span>
-            <button className="rounded-md px-2 py-1">Next</button>
-          </div>
-        </div>
+        <TablePagination
+          totalItems={0}
+          pageSize={pageSize}
+          currentPage={1}
+          onPageChange={() => {}}
+          onPageSizeChange={setPageSize}
+          itemNameSingular="source"
+          itemNamePlural="sources"
+        />
       </Surface>
     </div>
   );

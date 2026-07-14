@@ -21,6 +21,7 @@ import { Route as AppToolsApiRouteImport } from './routes/_app.tools.api'
 import { Route as AppQualityRulesRouteImport } from './routes/_app.quality.rules'
 import { Route as AppQualityMonitorRouteImport } from './routes/_app.quality.monitor'
 import { Route as AppQualityErrorsRouteImport } from './routes/_app.quality.errors'
+import { Route as AppQualityEnforcementRouteImport } from './routes/_app.quality.enforcement'
 import { Route as AppOperationsWorkflowRouteImport } from './routes/_app.operations.workflow'
 import { Route as AppOperationsSchedulesRouteImport } from './routes/_app.operations.schedules'
 import { Route as AppOperationsManageSchedulesRouteImport } from './routes/_app.operations.manage-schedules'
@@ -103,6 +104,11 @@ const AppQualityMonitorRoute = AppQualityMonitorRouteImport.update({
 const AppQualityErrorsRoute = AppQualityErrorsRouteImport.update({
   id: '/quality/errors',
   path: '/quality/errors',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQualityEnforcementRoute = AppQualityEnforcementRouteImport.update({
+  id: '/quality/enforcement',
+  path: '/quality/enforcement',
   getParentRoute: () => AppRoute,
 } as any)
 const AppOperationsWorkflowRoute = AppOperationsWorkflowRouteImport.update({
@@ -260,6 +266,7 @@ export interface FileRoutesByFullPath {
   '/operations/manage-schedules': typeof AppOperationsManageSchedulesRoute
   '/operations/schedules': typeof AppOperationsSchedulesRoute
   '/operations/workflow': typeof AppOperationsWorkflowRoute
+  '/quality/enforcement': typeof AppQualityEnforcementRoute
   '/quality/errors': typeof AppQualityErrorsRoute
   '/quality/monitor': typeof AppQualityMonitorRoute
   '/quality/rules': typeof AppQualityRulesRoute
@@ -297,6 +304,7 @@ export interface FileRoutesByTo {
   '/operations/manage-schedules': typeof AppOperationsManageSchedulesRoute
   '/operations/schedules': typeof AppOperationsSchedulesRoute
   '/operations/workflow': typeof AppOperationsWorkflowRoute
+  '/quality/enforcement': typeof AppQualityEnforcementRoute
   '/quality/errors': typeof AppQualityErrorsRoute
   '/quality/monitor': typeof AppQualityMonitorRoute
   '/quality/rules': typeof AppQualityRulesRoute
@@ -336,6 +344,7 @@ export interface FileRoutesById {
   '/_app/operations/manage-schedules': typeof AppOperationsManageSchedulesRoute
   '/_app/operations/schedules': typeof AppOperationsSchedulesRoute
   '/_app/operations/workflow': typeof AppOperationsWorkflowRoute
+  '/_app/quality/enforcement': typeof AppQualityEnforcementRoute
   '/_app/quality/errors': typeof AppQualityErrorsRoute
   '/_app/quality/monitor': typeof AppQualityMonitorRoute
   '/_app/quality/rules': typeof AppQualityRulesRoute
@@ -375,6 +384,7 @@ export interface FileRouteTypes {
     | '/operations/manage-schedules'
     | '/operations/schedules'
     | '/operations/workflow'
+    | '/quality/enforcement'
     | '/quality/errors'
     | '/quality/monitor'
     | '/quality/rules'
@@ -412,6 +422,7 @@ export interface FileRouteTypes {
     | '/operations/manage-schedules'
     | '/operations/schedules'
     | '/operations/workflow'
+    | '/quality/enforcement'
     | '/quality/errors'
     | '/quality/monitor'
     | '/quality/rules'
@@ -450,6 +461,7 @@ export interface FileRouteTypes {
     | '/_app/operations/manage-schedules'
     | '/_app/operations/schedules'
     | '/_app/operations/workflow'
+    | '/_app/quality/enforcement'
     | '/_app/quality/errors'
     | '/_app/quality/monitor'
     | '/_app/quality/rules'
@@ -550,6 +562,13 @@ declare module '@tanstack/react-router' {
       path: '/quality/errors'
       fullPath: '/quality/errors'
       preLoaderRoute: typeof AppQualityErrorsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quality/enforcement': {
+      id: '/_app/quality/enforcement'
+      path: '/quality/enforcement'
+      fullPath: '/quality/enforcement'
+      preLoaderRoute: typeof AppQualityEnforcementRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/operations/workflow': {
@@ -749,6 +768,7 @@ interface AppRouteChildren {
   AppOperationsManageSchedulesRoute: typeof AppOperationsManageSchedulesRoute
   AppOperationsSchedulesRoute: typeof AppOperationsSchedulesRoute
   AppOperationsWorkflowRoute: typeof AppOperationsWorkflowRoute
+  AppQualityEnforcementRoute: typeof AppQualityEnforcementRoute
   AppQualityErrorsRoute: typeof AppQualityErrorsRoute
   AppQualityMonitorRoute: typeof AppQualityMonitorRoute
   AppQualityRulesRoute: typeof AppQualityRulesRoute
@@ -785,6 +805,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppOperationsManageSchedulesRoute: AppOperationsManageSchedulesRoute,
   AppOperationsSchedulesRoute: AppOperationsSchedulesRoute,
   AppOperationsWorkflowRoute: AppOperationsWorkflowRoute,
+  AppQualityEnforcementRoute: AppQualityEnforcementRoute,
   AppQualityErrorsRoute: AppQualityErrorsRoute,
   AppQualityMonitorRoute: AppQualityMonitorRoute,
   AppQualityRulesRoute: AppQualityRulesRoute,

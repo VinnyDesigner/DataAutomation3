@@ -21,7 +21,7 @@ export function AppTopbar() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 bg-transparent px-4">
+    <header className="sticky top-0 z-40 flex h-14 items-center gap-3 bg-gradient-to-r from-transparent via-[color-mix(in_srgb,var(--background)_35%,transparent)] to-[color-mix(in_srgb,var(--background)_85%,transparent)] backdrop-blur-md border-b border-foreground/5 px-4 sm:px-6 lg:px-8">
 
 
       {/* Search */}

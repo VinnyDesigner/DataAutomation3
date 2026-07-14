@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   Search,
   Filter,
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Surface } from "@/components/app/Surface";
+import { TablePagination } from "@/components/app/TablePagination";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/quality/rules")({
@@ -199,6 +200,14 @@ function QualityRulesPage() {
     Object.fromEntries(TABS.map((t) => [t.key, t.data])) as Record<TabKey, Rule[]>,
   );
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Reset page to 1 when filters or tabs change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, query, category, severity, status]);
+
   const rules = rulesByTab[activeTab];
 
   const totals = useMemo(() => {
@@ -235,6 +244,10 @@ function QualityRulesPage() {
       return true;
     });
   }, [rules, query, category, severity, status]);
+
+  const paginatedRules = useMemo(() => {
+    return filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  }, [filtered, currentPage, pageSize]);
 
   const toggleEnabled = (id: string) => {
     setRulesByTab((prev) => ({
@@ -346,7 +359,7 @@ function QualityRulesPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((r) => (
+              {paginatedRules.map((r) => (
                 <tr
                   key={r.id}
                   className="border-b border-border/40 last:border-0 hover:bg-foreground/[0.02]"
@@ -423,22 +436,15 @@ function QualityRulesPage() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-border/60 px-5 py-3 text-[13px] text-muted-foreground">
-          <span>
-            Showing {filtered.length} of {rules.length}
-          </span>
-          <div className="flex items-center gap-3">
-            <span>Page 1 of 1</span>
-            <div className="flex items-center gap-2">
-              <button className="rounded-md border border-border/60 bg-card/60 px-3 py-1.5 text-foreground/70 hover:text-foreground">
-                Prev
-              </button>
-              <button className="rounded-md border border-border/60 bg-card/60 px-3 py-1.5 text-foreground/70 hover:text-foreground">
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
+        <TablePagination
+          totalItems={filtered.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={setPageSize}
+          itemNameSingular="rule"
+          itemNamePlural="rules"
+        />
       </Surface>
     </div>
   );

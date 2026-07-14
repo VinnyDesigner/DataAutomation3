@@ -27,7 +27,7 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { theme } = useTheme();
   const { state } = useSidebar();
-  const isLight = theme === "light";
+  const isLight = false;
   const isCollapsed = state === "collapsed";
   const headerLogo = isLight ? "/SDI For white.png" : "/SDI White.png";
   const collapsedIcon = isLight ? "/sdi for white mini.png" : "/SDI Dark theme mini.png";
@@ -157,16 +157,6 @@ export function AppSidebar() {
 
       <SidebarFooter className="space-y-3 p-3 group-data-[collapsible=icon]:hidden">
         <div className="space-y-2.5 rounded-xl border border-foreground/5 bg-[var(--sidebar-footer-bg)] p-3">
-          <div className="flex items-center justify-between text-[14px]">
-            <span className="text-muted-foreground">Environment</span>
-            <span className="rounded-md bg-success/15 px-1.5 py-0.5 font-medium text-success ring-1 ring-inset ring-success/25">
-              Production
-            </span>
-          </div>
-          <div className="flex items-center justify-between text-[14px]">
-            <span className="text-muted-foreground">Version</span>
-            <span className="font-mono text-foreground/70">v3.4.1</span>
-          </div>
           <div>
             <div className="mb-1 flex items-center justify-between text-[14px]">
               <span className="text-muted-foreground">Storage</span>
