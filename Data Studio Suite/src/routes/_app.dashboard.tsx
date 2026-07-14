@@ -378,7 +378,7 @@ function Dashboard() {
                 <CartesianGrid stroke="rgba(100,116,139,0.15)" strokeDasharray="4 4" />
                 <XAxis dataKey="day" stroke="var(--muted-foreground)" tick={{ fontSize: 15, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
                 <YAxis stroke="var(--muted-foreground)" tick={{ fontSize: 15, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
-                <RTooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 15 }} />
+                <RTooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 15 }} labelStyle={{ color: "#fff" }} itemStyle={{ color: "#fff" }} />
                 <Area type="monotone" dataKey="success" stroke="#5b8cff" strokeWidth={2.2} fill="url(#gSuccess)" />
                 <Area type="monotone" dataKey="failed" stroke="#ef4444" strokeWidth={1.8} fill="url(#gFail)" />
                 <Area type="monotone" dataKey="warn" stroke="#f59e0b" strokeWidth={1.6} fillOpacity={0} />
@@ -398,7 +398,7 @@ function Dashboard() {
                 <CartesianGrid stroke="rgba(100,116,139,0.15)" strokeDasharray="4 4" horizontal={false} />
                 <XAxis type="number" stroke="var(--muted-foreground)" tick={{ fontSize: 15, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
                 <YAxis dataKey="name" type="category" stroke="var(--muted-foreground)" tick={{ fontSize: 15, fontWeight: 700, fill: "var(--foreground)" }} tickLine={false} axisLine={false} width={72} />
-                <RTooltip cursor={{ fill: "rgba(100,116,139,0.08)" }} contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 15 }} />
+                <RTooltip cursor={{ fill: "rgba(100,116,139,0.08)" }} contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 15 }} labelStyle={{ color: "#fff" }} itemStyle={{ color: "#fff" }} />
                 <Bar dataKey="value" radius={[0, 8, 8, 0]} barSize={16}>
                   {entities.map((e, i) => (
                     <Cell key={i} fill={e.color} />
