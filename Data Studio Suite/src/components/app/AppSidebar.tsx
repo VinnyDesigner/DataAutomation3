@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronsLeftRight } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 import {
   Sidebar,
@@ -26,15 +26,26 @@ import { cn } from "@/lib/utils";
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { theme } = useTheme();
-  const { state } = useSidebar();
+  const { state, toggleSidebar } = useSidebar();
   const isLight = false;
   const isCollapsed = state === "collapsed";
   const headerLogo = isLight ? "/SDI For white.png" : "/SDI White.png";
   const collapsedIcon = isLight ? "/sdi for white mini.png" : "/SDI Dark theme mini.png";
 
-
   return (
     <Sidebar collapsible="icon" className="border-r-0 !bg-transparent p-3 group-data-[collapsible=icon]:p-2 [&>[data-sidebar=sidebar]]:relative [&>[data-sidebar=sidebar]]:rounded-2xl [&>[data-sidebar=sidebar]]:border [&>[data-sidebar=sidebar]]:border-sidebar-border [&>[data-sidebar=sidebar]]:bg-[linear-gradient(180deg,var(--sidebar-glass-from)_0%,var(--sidebar-glass-to)_100%)] [&>[data-sidebar=sidebar]]:shadow-[var(--sidebar-shadow)] [&>[data-sidebar=sidebar]]:backdrop-blur-xl">
+      {/* Edge toggle handle straddling inside and outside */}
+      <button
+        onClick={toggleSidebar}
+        className={cn(
+          "absolute top-[78px] z-50 flex h-7 w-7 items-center justify-center rounded-lg border border-border/80 bg-card shadow-[0_4px_12px_rgba(0,0,0,0.35)] text-muted-foreground transition-all hover:bg-accent hover:text-white hover:border-accent/40 focus:outline-none",
+          isCollapsed ? "-right-3.5" : "-right-3.5"
+        )}
+        title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+      >
+        <ChevronsLeftRight className="h-3.5 w-3.5" />
+      </button>
+
       {/* Bottom soft gradient fade */}
       <div
         className="pointer-events-none absolute bottom-3 left-3 right-3 z-30 h-32 rounded-b-2xl"
@@ -62,9 +73,6 @@ export function AppSidebar() {
               className="hidden h-10 w-10 object-contain group-data-[collapsible=icon]:block"
             />
           </Link>
-          <div className="flex w-full justify-end group-data-[collapsible=icon]:justify-center">
-            <SidebarTrigger className="h-8 w-8 shrink-0 rounded-lg border border-border/60 bg-card/60 text-muted-foreground transition-colors hover:border-accent/40 hover:text-foreground" />
-          </div>
         </div>
       </SidebarHeader>
 
