@@ -65,7 +65,7 @@ function Login() {
       <AmbientBackdrop />
 
       {/* Centered container — tighter gutters */}
-      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-[1720px] flex-col px-5 sm:px-6 md:px-8 lg:px-8 xl:px-10 2xl:px-14">
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-none flex-col px-5 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
 
         {/* Top logo bar */}
         <motion.header
@@ -87,10 +87,10 @@ function Login() {
         </motion.header>
 
         {/* Body */}
-        <div className="grid flex-1 grid-cols-1 items-center justify-items-center gap-8 py-4 lg:grid-cols-3 lg:gap-8 xl:gap-12 lg:justify-items-stretch">
+        <div className="grid flex-1 grid-cols-1 items-center justify-items-center gap-8 py-4 lg:grid-cols-3 lg:gap-16 xl:gap-24 2xl:gap-36 lg:justify-items-stretch">
 
           {/* -------------------- LEFT / Hero copy -------------------- */}
-          <div className="relative order-1 flex flex-col items-start text-left max-w-[500px] lg:max-w-none">
+          <div className="relative order-1 flex flex-col items-start text-left max-w-[500px] lg:max-w-none xl:max-w-[540px] 2xl:max-w-[620px]">
             <motion.div
               initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -313,7 +313,7 @@ function CircularHub({ compact = false }: { compact?: boolean }) {
 
   return (
     <div
-      className="relative pointer-events-auto"
+      className="relative pointer-events-auto transition-transform duration-300 xl:scale-110 2xl:scale-125"
       style={{ width: size, height: size }}
     >
       {/* Concentric mesh rings */}

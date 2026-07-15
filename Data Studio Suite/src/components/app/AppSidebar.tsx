@@ -33,7 +33,7 @@ export function AppSidebar() {
   const collapsedIcon = isLight ? "/sdi for white mini.png" : "/SDI Dark theme mini.png";
 
   return (
-    <Sidebar collapsible="icon" className="border-r-0 !bg-transparent p-3 group-data-[collapsible=icon]:p-2 [&>[data-sidebar=sidebar]]:relative [&>[data-sidebar=sidebar]]:rounded-2xl [&>[data-sidebar=sidebar]]:border [&>[data-sidebar=sidebar]]:border-sidebar-border [&>[data-sidebar=sidebar]]:bg-[linear-gradient(180deg,var(--sidebar-glass-from)_0%,var(--sidebar-glass-to)_100%)] [&>[data-sidebar=sidebar]]:shadow-[var(--sidebar-shadow)] [&>[data-sidebar=sidebar]]:backdrop-blur-xl">
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border !bg-transparent p-0 [&>[data-sidebar=sidebar]]:relative [&>[data-sidebar=sidebar]]:rounded-none [&>[data-sidebar=sidebar]]:border-0 [&>[data-sidebar=sidebar]]:bg-[linear-gradient(180deg,var(--sidebar-glass-from)_0%,var(--sidebar-glass-to)_100%)] [&>[data-sidebar=sidebar]]:shadow-[var(--sidebar-shadow)] [&>[data-sidebar=sidebar]]:backdrop-blur-xl">
       {/* Edge toggle handle straddling inside and outside */}
       <button
         onClick={toggleSidebar}
@@ -48,7 +48,7 @@ export function AppSidebar() {
 
       {/* Bottom soft gradient fade */}
       <div
-        className="pointer-events-none absolute bottom-3 left-3 right-3 z-30 h-32 rounded-b-2xl"
+        className="pointer-events-none absolute bottom-0 left-0 right-0 z-30 h-32 rounded-none"
         style={{
           background: isLight
             ? "linear-gradient(to top, rgba(37, 99, 235, 0.18) 0%, rgba(37, 99, 235, 0.06) 50%, transparent 100%)"
@@ -167,8 +167,8 @@ export function AppSidebar() {
         <div className="space-y-2.5 rounded-xl border border-foreground/5 bg-[var(--sidebar-footer-bg)] p-3">
           <div>
             <div className="mb-1 flex items-center justify-between text-[14px]">
-              <span className="text-muted-foreground">Storage</span>
-              <span className="text-foreground/80">64%</span>
+              <span className="text-sidebar-foreground/80">Storage</span>
+              <span className="text-sidebar-foreground font-semibold">64%</span>
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-foreground/5">
               <div className="h-full w-[64%] rounded-full bg-linear-to-r from-primary to-accent" />
@@ -179,7 +179,7 @@ export function AppSidebar() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
             </span>
-            <span className="text-muted-foreground">All systems operational</span>
+            <span className="text-sidebar-foreground/90 font-medium">All systems operational</span>
           </div>
         </div>
       </SidebarFooter>

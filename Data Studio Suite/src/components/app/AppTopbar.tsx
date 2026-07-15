@@ -21,7 +21,7 @@ export function AppTopbar() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-3 bg-gradient-to-r from-transparent via-[color-mix(in_srgb,var(--background)_35%,transparent)] to-[color-mix(in_srgb,var(--background)_85%,transparent)] backdrop-blur-md border-b border-foreground/5 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 flex h-14 items-center gap-3 bg-gradient-to-r from-transparent via-[color-mix(in_srgb,var(--background)_35%,transparent)] to-[color-mix(in_srgb,var(--background)_85%,transparent)] backdrop-blur-md border-b border-foreground/5 px-4 sm:px-5 lg:px-6">
 
 
       {/* Search */}
@@ -86,14 +86,14 @@ export function AppTopbar() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild className="text-destructive focus:text-destructive">
-              <Link to="/login" className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-md bg-destructive/10 ring-1 ring-inset ring-destructive/20">
+            <DropdownMenuItem asChild className="text-danger focus:bg-danger/15 focus:text-danger! dark:focus:bg-danger/20 dark:focus:text-danger! cursor-pointer group">
+              <Link to="/login" className="flex items-center gap-2 w-full">
+                <span className="flex h-7 w-7 items-center justify-center rounded-md bg-destructive/10 ring-1 ring-inset ring-destructive/20 group-focus:bg-danger/20 group-hover:bg-danger/20 group-focus:ring-danger/35 group-hover:ring-danger/35 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
                 </span>
                 <div className="flex flex-col">
                   <span className="text-[14px] font-medium">Sign Out</span>
-                  <span className="text-[12px] text-destructive/70">End your session</span>
+                  <span className="text-[12px] text-muted-foreground group-focus:text-danger/80 group-hover:text-danger/80 transition-colors">End your session</span>
                 </div>
               </Link>
             </DropdownMenuItem>
