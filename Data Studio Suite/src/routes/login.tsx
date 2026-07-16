@@ -221,7 +221,7 @@ function Login() {
         </motion.header>
 
         {/* Body */}
-        <div className="grid flex-1 grid-cols-1 items-center justify-items-center gap-8 py-4 lg:grid-cols-[1fr_auto_1fr] lg:gap-8 xl:gap-12 2xl:gap-16 lg:justify-items-stretch login-body-grid">
+        <div className="grid flex-1 grid-cols-1 items-center justify-items-center gap-8 py-4 lg:grid-cols-[1.3fr_1fr] lg:gap-8 xl:gap-12 2xl:gap-16 lg:justify-items-stretch login-body-grid">
 
           {/* -------------------- LEFT / Hero copy -------------------- */}
           <div className="relative order-1 flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-[480px] xl:max-w-[760px] 2xl:max-w-[900px] login-hero-wrapper">
@@ -287,17 +287,18 @@ function Login() {
               orchestrating validation, transformation, metadata and quality
               across every layer of the pipeline.
             </motion.p>
-          </div>
 
-          <div className="relative order-2 flex items-center justify-center py-6 lg:py-0">
-            <div className="hidden xl:block">
-              <CircularHub />
-            </div>
-            <div className="hidden sm:block xl:hidden">
-              <CircularHub compact />
-            </div>
-            <div className="sm:hidden">
-              <CircularHub compact />
+            {/* Circular diagram placed responsively below text */}
+            <div className="relative flex w-full items-center justify-center py-6 mt-6 lg:mt-8 login-workflow-hub-container">
+              <div className="hidden xl:block">
+                <CircularHub />
+              </div>
+              <div className="hidden sm:block xl:hidden">
+                <CircularHub compact />
+              </div>
+              <div className="sm:hidden">
+                <CircularHub compact />
+              </div>
             </div>
           </div>
 
