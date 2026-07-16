@@ -21,6 +21,7 @@ import {
   LineChart,
   Shield,
   Server,
+  Activity,
 } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
@@ -175,6 +176,205 @@ function AnimatedLogo() {
   );
 }
 
+function FloatingKeywords() {
+  return (
+    <div className="mt-5 mb-5 flex flex-wrap items-center gap-x-3.5 gap-y-2 select-none login-hero-subheading leading-[1.15] tracking-[-0.02em] font-bold text-[18px] min-[400px]:text-[20px] sm:text-[24px] md:text-[28px] lg:text-[20px] xl:text-[28px] 2xl:text-[36px]">
+      <span className="text-primary inline-block animate-smooth-float-1">
+        Automate,
+      </span>
+
+      <span className="text-success inline-block animate-smooth-float-2">
+        Monitor,
+      </span>
+
+      <span className="text-info inline-block animate-smooth-float-3">
+        and Governance
+      </span>
+
+      <span className="bg-gradient-to-r from-white via-slate-100 to-sky-300 bg-clip-text text-transparent inline-block drop-shadow-[0_2px_10px_rgba(56,189,248,0.15)] pl-0.5 animate-smooth-float-4">
+        Enterprise Data Workflows
+      </span>
+    </div>
+  );
+}
+
+
+
+const HUB_NODES = [
+  { Icon: Server, angle: -90, label: "Data Sources" },
+  { Icon: FileText, angle: -30, label: "Metadata" },
+  { Icon: ShieldCheck, angle: 30, label: "Data Quality" },
+  { Icon: Workflow, angle: 90, label: "Orchestration" },
+  { Icon: ArrowLeftRight, angle: 150, label: "ETL" },
+  { Icon: Shield, angle: 210, label: "Governance" },
+];
+
+function CircularHub({ compact = false }: { compact?: boolean }) {
+  const size = compact ? 280 : 380;
+  const radius = compact ? 105 : 145;
+  const center = size / 2;
+
+  return (
+    <div
+      className="relative pointer-events-auto transition-transform duration-300 scale-100 xl:scale-105 2xl:scale-115 login-workflow-hub"
+      style={{ width: size, height: size }}
+    >
+      {/* Concentric mesh rings */}
+      <svg className="absolute inset-0" viewBox={`0 0 ${size} ${size}`}>
+        <defs>
+          <radialGradient id="hub-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="var(--info)" stopOpacity="0.35" />
+            <stop offset="60%" stopColor="var(--primary)" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+        </defs>
+        <circle cx={center} cy={center} r={radius * 1.35} fill="url(#hub-glow)" />
+        {[0.5, 0.75, 1, 1.25].map((k, i) => (
+          <motion.circle
+            key={i}
+            cx={center}
+            cy={center}
+            r={radius * k}
+            fill="none"
+            stroke="var(--info)"
+            strokeOpacity={0.35}
+            strokeDasharray="3 5"
+            animate={{ 
+              strokeDashoffset: i % 2 === 0 ? [0, 80] : [0, -80] 
+            }}
+            transition={{ 
+              duration: 6 + i * 2, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+          />
+        ))}
+        {/* Spokes with flowing animation */}
+        {HUB_NODES.map((n, i) => {
+          const rad = (n.angle * Math.PI) / 180;
+          const x = center + Math.cos(rad) * radius;
+          const y = center + Math.sin(rad) * radius;
+          return (
+            <motion.line
+              key={i}
+              x1={center}
+              y1={center}
+              x2={x}
+              y2={y}
+              stroke="var(--info)"
+              strokeOpacity={0.38}
+              strokeDasharray="4 4"
+              animate={{ strokeDashoffset: [0, -32] }}
+              transition={{ 
+                duration: 1.2, 
+                repeat: Infinity, 
+                ease: "linear" 
+              }}
+            />
+          );
+        })}
+      </svg>
+
+      {/* Center Database Hub */}
+      <motion.div
+        animate={{
+          boxShadow: [
+            "0 0 35px rgba(6,182,212,0.45), inset 0 1px 0 rgba(255,255,255,0.1)",
+            "0 0 50px rgba(6,182,212,0.65), inset 0 1px 0 rgba(255,255,255,0.15)",
+            "0 0 35px rgba(6,182,212,0.45), inset 0 1px 0 rgba(255,255,255,0.1)"
+          ]
+        }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-full border border-info/50 bg-background/90 text-info shadow-[0_0_35px_rgba(6,182,212,0.45),inset_0_1px_0_rgba(255,255,255,0.1)]"
+        style={{ width: compact ? 42 : 52, height: compact ? 42 : 52 }}
+      >
+        {/* Pulsing outer ring */}
+        <motion.span
+          animate={{ scale: [1, 1.3, 1], opacity: [0.35, 0.65, 0.35] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 rounded-full border-2 border-info/35"
+        />
+        <Database className={compact ? "h-4.5 w-4.5 animate-pulse" : "h-5.5 w-5.5 animate-pulse"} />
+      </motion.div>
+
+      {/* Center Hub Label */}
+      <div
+        className="absolute left-1/2 -translate-x-1/2 text-center pointer-events-none"
+        style={{
+          top: `calc(50% + ${compact ? "30px" : "38px"})`,
+        }}
+      >
+        <span className="text-[8.5px] sm:text-[9.5px] font-semibold tracking-wider uppercase text-info bg-info/10 backdrop-blur-md px-1.5 py-0.5 rounded border border-info/20 shadow-[0_0_12px_rgba(6,182,212,0.15)] whitespace-nowrap">
+          Enterprise Database
+        </span>
+      </div>
+
+      {/* Nodes with gentle floating orbits */}
+      {HUB_NODES.map((n, i) => {
+        const rad = (n.angle * Math.PI) / 180;
+        const x = center + Math.cos(rad) * radius;
+        const y = center + Math.sin(rad) * radius;
+        return (
+          <motion.div 
+            key={i} 
+            className="absolute" 
+            style={{ left: x, top: y }}
+            animate={{
+              y: [0, -4, 0],
+              x: [0, i % 2 === 0 ? 1.5 : -1.5, 0]
+            }}
+            transition={{
+              duration: 4.5 + i * 0.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            {/* The Icon Circle */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.15, borderColor: "var(--info)", boxShadow: "0 0 32px -4px var(--info), inset 0 1px 0 rgba(255,255,255,0.15)" }}
+              transition={{ duration: 0.4, delay: 0.2 + i * 0.05 }}
+              className="absolute grid place-items-center rounded-full border border-info/30 bg-background/90 text-info backdrop-blur-md hover:text-white transition-colors cursor-pointer -translate-x-1/2 -translate-y-1/2"
+              style={{
+                width: compact ? 38 : 46,
+                height: compact ? 38 : 46,
+                boxShadow: "0 0 24px -6px var(--info), inset 0 1px 0 rgba(255,255,255,0.08)",
+              }}
+            >
+              {/* Rocking/pulsing inner icon */}
+              <motion.div
+                animate={{
+                  rotate: [0, 8, -8, 0],
+                  scale: [1, 1.08, 0.95, 1]
+                }}
+                transition={{
+                  duration: 3.5 + i * 0.6,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="flex items-center justify-center w-full h-full"
+              >
+                <n.Icon className={compact ? "h-3.5 w-3.5" : "h-4.5 w-4.5"} />
+              </motion.div>
+            </motion.div>
+            
+            {/* The Text Label */}
+            <motion.span
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 + i * 0.05 }}
+              className="absolute top-7 sm:top-8 left-1/2 -translate-x-1/2 text-[8.5px] sm:text-[9px] font-semibold tracking-wider uppercase text-info/95 text-center bg-info/10 backdrop-blur-md px-1.5 py-0.5 rounded border border-info/20 shadow-[0_0_12px_rgba(6,182,212,0.15)] whitespace-nowrap"
+            >
+              {n.label}
+            </motion.span>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
 function Login() {
   const [show, setShow] = useState(false);
   const [caps, setCaps] = useState(false);
@@ -220,11 +420,11 @@ function Login() {
           />
         </motion.header>
 
-        {/* Body */}
-        <div className="grid flex-1 grid-cols-1 items-center lg:items-stretch justify-items-center gap-6 pt-2 pb-2 lg:pt-2 xl:pt-3 lg:grid-cols-[1.3fr_1fr] lg:gap-6 xl:gap-8 lg:justify-items-stretch login-body-grid">
+        {/* Body Grid: 3 columns on desktop for mathematically equal distribution */}
+        <div className="grid flex-1 grid-cols-1 items-center lg:items-stretch justify-items-center gap-6 pt-2 pb-2 lg:pt-2 xl:pt-3 lg:grid-cols-[1.1fr_1.1fr_1.2fr] lg:gap-6 xl:gap-8 lg:justify-items-stretch login-body-grid">
 
-          {/* -------------------- LEFT / Hero copy -------------------- */}
-          <div className="relative order-1 flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-[650px] xl:max-w-[850px] 2xl:max-w-[1000px] lg:self-start login-hero-wrapper">
+          {/* -------------------- HERO COPY (Spans Col 1 & Col 2) -------------------- */}
+          <div className="relative order-1 col-span-1 lg:col-start-1 lg:col-span-2 lg:row-start-1 justify-self-start flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-none lg:self-start login-hero-wrapper">
             <div className="relative w-full flex items-center gap-4 sm:gap-5 login-logo-title-group">
               {/* Premium Glow Highlight Effect behind title */}
               <div className="absolute -left-12 -top-12 -right-12 -bottom-12 pointer-events-none bg-gradient-to-r from-primary/25 via-accent/15 to-info/20 blur-3xl opacity-75 rounded-full" />
@@ -266,17 +466,14 @@ function Login() {
               </div>
             </div>
 
-            <motion.h1
+            <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.15 }}
-              className="mt-5 text-[18px] min-[400px]:text-[20px] sm:text-[24px] md:text-[28px] lg:text-[20px] xl:text-[28px] 2xl:text-[36px] font-bold leading-[1.15] tracking-[-0.02em] login-hero-subheading whitespace-nowrap lg:whitespace-normal xl:whitespace-nowrap"
+              className="w-full mt-2"
             >
-              <span className="text-primary">Automate,</span>{" "}
-              <span className="text-success">Monitor,</span>{" "}
-              <span className="text-info">and Governance</span>{" "}
-              <span className="text-foreground">Enterprise Data Workflows</span>
-            </motion.h1>
+              <FloatingKeywords />
+            </motion.div>
 
             <motion.p
               initial={{ opacity: 0, y: 8 }}
@@ -288,23 +485,148 @@ function Login() {
               orchestrating validation, transformation, metadata and quality
               across every layer of the pipeline.
             </motion.p>
+          </div>
 
-            {/* Circular diagram placed responsively below text */}
-            <div className="relative flex w-full items-center justify-center py-2 mt-4 lg:mt-6 xl:mt-7 login-workflow-hub-container">
-              <div className="hidden xl:block">
-                <CircularHub />
+          {/* -------------------- COLUMN 1 BOTTOM / Blended Image -------------------- */}
+          <div className="col-span-1 order-2 lg:col-start-1 lg:row-start-2 flex items-center justify-center lg:justify-start lg:self-end pb-5 overflow-visible">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative w-full max-w-[384px] aspect-square pointer-events-none select-none overflow-visible"
+            >
+              {/* Radial gradient mask to feather edges into transparency */}
+              <div 
+                className="relative w-full h-full opacity-80"
+                style={{
+                  maskImage: "radial-gradient(circle at 50% 50%, black 15%, transparent 75%)",
+                  WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 15%, transparent 75%)",
+                }}
+              >
+                <img
+                  src="/data_hub_isometric.png"
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+                
+                {/* Radial Gradient overlay to blend the image colors seamlessly into the #0e1828 background */}
+                <div 
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    backgroundImage: "radial-gradient(circle, transparent 20%, #0e1828 75%)"
+                  }}
+                />
+
+                {/* Grid overlay specifically on top of the image to show lines passing through the artwork */}
+                <div 
+                  className="absolute inset-0 opacity-[0.08]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(var(--muted-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--muted-foreground) 1px, transparent 1px)",
+                    backgroundSize: "56px 56px",
+                    maskImage: "radial-gradient(circle at 50% 50%, black 20%, transparent 80%)",
+                    WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 20%, transparent 80%)",
+                  }}
+                />
               </div>
-              <div className="hidden sm:block xl:hidden">
-                <CircularHub compact />
-              </div>
-              <div className="sm:hidden">
-                <CircularHub compact />
-              </div>
+
+              {/* Glowing isometric circuit pulses overlay */}
+              <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none opacity-85" viewBox="0 0 100 100">
+                <defs>
+                  <linearGradient id="line-glow-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="var(--info)" stopOpacity="0" />
+                    <stop offset="50%" stopColor="var(--info)" stopOpacity="1" />
+                    <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient id="line-glow-cyan" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="var(--info)" stopOpacity="0" />
+                    <stop offset="50%" stopColor="var(--info)" stopOpacity="1" />
+                    <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+
+                {/* Circuit path 1: Upper-left to Lower-right isometric angle */}
+                <motion.path
+                  d="M 20 40 L 45 52 L 80 70"
+                  fill="none"
+                  stroke="url(#line-glow-blue)"
+                  strokeWidth="0.8"
+                  strokeLinecap="round"
+                  strokeDasharray="15 45"
+                  animate={{ strokeDashoffset: [60, 0] }}
+                  transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+                />
+
+                {/* Circuit path 2: Lower-left to Upper-right isometric angle */}
+                <motion.path
+                  d="M 15 65 L 42 51 L 75 35"
+                  fill="none"
+                  stroke="url(#line-glow-cyan)"
+                  strokeWidth="0.8"
+                  strokeLinecap="round"
+                  strokeDasharray="12 38"
+                  animate={{ strokeDashoffset: [50, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: 1 }}
+                />
+
+                {/* Circuit path 3: Core vertical connection */}
+                <motion.path
+                  d="M 50 18 L 50 48 L 50 82"
+                  fill="none"
+                  stroke="url(#line-glow-blue)"
+                  strokeWidth="0.6"
+                  strokeLinecap="round"
+                  strokeDasharray="10 30"
+                  animate={{ strokeDashoffset: [40, 0] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                />
+
+                {/* Circuit path 4: Outer ring pulse */}
+                <motion.path
+                  d="M 30 50 A 20 20 0 1 0 70 50 A 20 20 0 1 0 30 50"
+                  fill="none"
+                  stroke="var(--info)"
+                  strokeWidth="0.4"
+                  strokeLinecap="round"
+                  strokeDasharray="8 40"
+                  animate={{ strokeDashoffset: [48, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                  opacity="0.6"
+                />
+              </svg>
+              
+              {/* Rotating/pulsing ambient blue highlight glow behind the artwork */}
+              <motion.div 
+                animate={{ 
+                  scale: [1, 1.08, 1],
+                  opacity: [0.65, 0.85, 0.65],
+                  rotate: [0, 360]
+                }}
+                transition={{ 
+                  duration: 15, 
+                  repeat: Infinity, 
+                  ease: "linear" 
+                }}
+                className="absolute -inset-14 bg-[radial-gradient(circle,rgba(6,182,212,0.22)_0%,rgba(37,99,235,0.12)_50%,transparent_100%)] blur-3xl rounded-full pointer-events-none z-[-1]"
+              />
+            </motion.div>
+          </div>
+
+          {/* -------------------- COLUMN 2 BOTTOM / Interactive Circular Hub -------------------- */}
+          <div className="col-span-1 order-3 lg:col-start-2 lg:row-start-2 flex items-center justify-center lg:justify-center lg:self-end pb-5 overflow-visible">
+            <div className="hidden xl:block">
+              <CircularHub />
+            </div>
+            <div className="hidden sm:block xl:hidden">
+              <CircularHub compact />
+            </div>
+            <div className="sm:hidden">
+              <CircularHub compact />
             </div>
           </div>
 
-          {/* -------------------- RIGHT / Auth card -------------------- */}
-          <div className="relative order-3 flex items-center justify-center lg:justify-end">
+          {/* -------------------- COLUMN 3 / Auth card -------------------- */}
+          <div className="col-span-1 order-4 lg:col-start-3 lg:row-start-1 lg:row-span-2 flex items-center justify-center lg:justify-end lg:self-center">
 
             <motion.form
               initial={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -314,7 +636,15 @@ function Login() {
               className="relative w-full max-w-[460px] login-card-form"
             >
               {/* Card */}
-              <div className="glass-strong relative overflow-hidden rounded-[24px] px-6 py-6 shadow-[var(--shadow-elevated)] sm:rounded-[28px] sm:px-8 sm:py-7 login-card-container">
+              <div 
+                className="relative overflow-hidden rounded-[24px] px-6 py-6 sm:rounded-[28px] sm:px-8 sm:py-7 login-card-container border border-white/[0.08]"
+                style={{
+                  backgroundColor: "rgba(14, 24, 40, 0.55)",
+                  backdropFilter: "blur(24px)",
+                  WebkitBackdropFilter: "blur(24px)",
+                  boxShadow: "0 24px 64px -12px rgba(0, 0, 0, 0.7), 0 0 50px -10px rgba(37, 99, 235, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15)",
+                }}
+              >
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/[0.08] to-transparent" />
                 <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-info/10 blur-3xl" />
@@ -450,131 +780,7 @@ function Login() {
 /* Circular hub visualization                                          */
 /* ------------------------------------------------------------------ */
 
-const HUB_NODES = [
-  { Icon: Server, angle: -90, label: "Data Sources" },
-  { Icon: FileText, angle: -30, label: "Metadata" },
-  { Icon: ShieldCheck, angle: 30, label: "Data Quality" },
-  { Icon: Workflow, angle: 90, label: "Orchestration" },
-  { Icon: ArrowLeftRight, angle: 150, label: "ETL" },
-  { Icon: Shield, angle: 210, label: "Governance" },
-];
 
-function CircularHub({ compact = false }: { compact?: boolean }) {
-  const size = compact ? 320 : 420;
-  const radius = compact ? 120 : 160;
-  const center = size / 2;
-
-  return (
-    <div
-      className="relative pointer-events-auto transition-transform duration-300 xl:scale-110 2xl:scale-125 login-workflow-hub"
-      style={{ width: size, height: size }}
-    >
-      {/* Concentric mesh rings */}
-      <svg className="absolute inset-0" viewBox={`0 0 ${size} ${size}`}>
-        <defs>
-          <radialGradient id="hub-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="var(--info)" stopOpacity="0.35" />
-            <stop offset="60%" stopColor="var(--primary)" stopOpacity="0.05" />
-            <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
-        </defs>
-        <circle cx={center} cy={center} r={radius * 1.35} fill="url(#hub-glow)" />
-        {[0.5, 0.75, 1, 1.25].map((k, i) => (
-          <circle
-            key={i}
-            cx={center}
-            cy={center}
-            r={radius * k}
-            fill="none"
-            stroke="var(--info)"
-            strokeOpacity={0.14}
-            strokeDasharray="2 4"
-          />
-        ))}
-        {/* Spokes */}
-        {HUB_NODES.map((n, i) => {
-          const rad = (n.angle * Math.PI) / 180;
-          const x = center + Math.cos(rad) * radius;
-          const y = center + Math.sin(rad) * radius;
-          return (
-            <line
-              key={i}
-              x1={center}
-              y1={center}
-              x2={x}
-              y2={y}
-              stroke="var(--info)"
-              strokeOpacity={0.22}
-              strokeDasharray="3 4"
-            />
-          );
-        })}
-      </svg>
-
-      {/* Center Database Hub */}
-      <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-full border border-info/50 bg-background/90 text-info shadow-[0_0_35px_rgba(6,182,212,0.45),inset_0_1px_0_rgba(255,255,255,0.1)]"
-        style={{ width: compact ? 48 : 58, height: compact ? 48 : 58 }}
-      >
-        {/* Pulsing outer ring */}
-        <motion.span
-          animate={{ scale: [1, 1.3, 1], opacity: [0.35, 0.65, 0.35] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute inset-0 rounded-full border-2 border-info/35"
-        />
-        <Database className={compact ? "h-5 w-5 animate-pulse" : "h-6 w-6 animate-pulse"} />
-      </div>
-
-      {/* Center Hub Label */}
-      <div
-        className="absolute left-1/2 -translate-x-1/2 text-center pointer-events-none"
-        style={{
-          top: `calc(50% + ${compact ? "32px" : "38px"})`,
-        }}
-      >
-        <span className="text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase text-info bg-info/10 backdrop-blur-md px-2 py-0.5 rounded border border-info/20 shadow-[0_0_12px_rgba(6,182,212,0.15)] whitespace-nowrap">
-          Enterprise Database
-        </span>
-      </div>
-
-      {/* Nodes */}
-      {HUB_NODES.map((n, i) => {
-        const rad = (n.angle * Math.PI) / 180;
-        const x = center + Math.cos(rad) * radius;
-        const y = center + Math.sin(rad) * radius;
-        return (
-          <div key={i} className="absolute" style={{ left: x, top: y }}>
-            {/* The Icon Circle */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.1, borderColor: "var(--info)" }}
-              transition={{ duration: 0.4, delay: 0.2 + i * 0.05 }}
-              className="absolute grid place-items-center rounded-full border border-info/30 bg-background/90 text-info backdrop-blur-md hover:text-white transition-colors cursor-pointer -translate-x-1/2 -translate-y-1/2"
-              style={{
-                width: compact ? 44 : 54,
-                height: compact ? 44 : 54,
-                boxShadow: "0 0 24px -6px var(--info), inset 0 1px 0 rgba(255,255,255,0.08)",
-              }}
-            >
-              <n.Icon className={compact ? "h-4 w-4" : "h-5 w-5"} />
-            </motion.div>
-            
-            {/* The Text Label */}
-            <motion.span
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 + i * 0.05 }}
-              className="absolute top-7 sm:top-8 left-1/2 -translate-x-1/2 text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase text-info/95 text-center bg-info/10 backdrop-blur-md px-2 py-0.5 rounded border border-info/20 shadow-[0_0_12px_rgba(6,182,212,0.15)] whitespace-nowrap"
-            >
-              {n.label}
-            </motion.span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* Animated shield                                                     */
@@ -600,37 +806,67 @@ function AnimatedShield() {
 
 function AmbientBackdrop() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#0a0f1d]">
       {/* Base wash */}
-      <div className="absolute inset-0 bg-[var(--gradient-hero)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d] via-[#0c1424] to-[#080d1a]" />
 
-      {/* Mesh grid */}
+      {/* Horizon glow: subtle light source at the horizontal center */}
+      <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75%] h-[35%] bg-gradient-to-r from-primary/15 via-info/20 to-accent/8 blur-[180px] rounded-full pointer-events-none opacity-85" />
+
+      {/* Flat backdrop grid (subtle) */}
       <div
-        className="absolute inset-0 opacity-[0.05]"
+        className="absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage:
             "linear-gradient(var(--muted-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--muted-foreground) 1px, transparent 1px)",
           backgroundSize: "56px 56px",
           maskImage:
             "radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%)",
         }}
       />
 
+      {/* 3D Perspective Grid Floor receding into the distance */}
+      <div 
+        className="absolute inset-0 top-[15%] opacity-[0.06]"
+        style={{
+          perspective: "900px",
+        }}
+      >
+        <div 
+          className="w-full h-[150%] origin-top"
+          style={{
+            transform: "rotateX(62deg) scale(1.6) translateY(-5%)",
+            backgroundImage:
+              "linear-gradient(var(--muted-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--muted-foreground) 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
+            maskImage: "linear-gradient(to bottom, black 15%, transparent 75%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 15%, transparent 75%)",
+          }}
+        />
+      </div>
+
       {/* Ambient orbs */}
       <motion.div
-        animate={{ opacity: [0.5, 0.8, 0.5], x: [0, 12, 0] }}
+        animate={{ opacity: [0.5, 0.8, 0.5], x: [0, 15, 0], y: [0, -10, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute left-[6%] top-[14%] h-[420px] w-[420px] rounded-full bg-primary/15 blur-[130px]"
+        className="absolute left-[5%] top-[12%] h-[460px] w-[460px] rounded-full bg-primary/18 blur-[140px]"
       />
       <motion.div
-        animate={{ opacity: [0.45, 0.75, 0.45], y: [0, -14, 0] }}
+        animate={{ opacity: [0.45, 0.8, 0.45], y: [0, -18, 0], x: [0, 10, 0] }}
         transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute right-[8%] top-[20%] h-[440px] w-[440px] rounded-full bg-info/12 blur-[140px]"
+        className="absolute right-[5%] top-[18%] h-[480px] w-[480px] rounded-full bg-info/15 blur-[150px]"
       />
       <motion.div
-        animate={{ opacity: [0.4, 0.7, 0.4], x: [0, -10, 0] }}
+        animate={{ opacity: [0.4, 0.7, 0.4], x: [0, -12, 0], y: [0, 12, 0] }}
         transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[-10%] left-[30%] h-[500px] w-[500px] rounded-full bg-success/10 blur-[150px]"
+        className="absolute bottom-[-15%] left-[25%] h-[550px] w-[550px] rounded-full bg-success/12 blur-[160px]"
+      />
+      <motion.div
+        animate={{ opacity: [0.3, 0.6, 0.3], y: [0, 20, 0] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-[10%] right-[10%] h-[350px] w-[350px] rounded-full bg-accent/8 blur-[120px]"
       />
     </div>
   );
