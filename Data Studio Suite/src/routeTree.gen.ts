@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppMetadataIndexRouteImport } from './routes/_app.metadata.index'
 import { Route as AppDataSourcesIndexRouteImport } from './routes/_app.data-sources.index'
+import { Route as AppToolsParametersRouteImport } from './routes/_app.tools.parameters'
 import { Route as AppToolsConnectorsRouteImport } from './routes/_app.tools.connectors'
 import { Route as AppToolsAutomationRouteImport } from './routes/_app.tools.automation'
 import { Route as AppToolsApiRouteImport } from './routes/_app.tools.api'
@@ -30,8 +31,11 @@ import { Route as AppOperationsDeliveriesRouteImport } from './routes/_app.opera
 import { Route as AppOperationsCreateScheduleRouteImport } from './routes/_app.operations.create-schedule'
 import { Route as AppMetadataValidationRouteImport } from './routes/_app.metadata.validation'
 import { Route as AppMetadataTemplatesRouteImport } from './routes/_app.metadata.templates'
+import { Route as AppInsightsReviewRouteImport } from './routes/_app.insights.review'
 import { Route as AppInsightsReportsRouteImport } from './routes/_app.insights.reports'
+import { Route as AppInsightsQaqcRouteImport } from './routes/_app.insights.qaqc'
 import { Route as AppInsightsDashboardsRouteImport } from './routes/_app.insights.dashboards'
+import { Route as AppInsightsComplianceRouteImport } from './routes/_app.insights.compliance'
 import { Route as AppInsightsAnalyticsRouteImport } from './routes/_app.insights.analytics'
 import { Route as AppEntitiesRepresentativesRouteImport } from './routes/_app.entities.representatives'
 import { Route as AppEntitiesEntityRouteImport } from './routes/_app.entities.entity'
@@ -74,6 +78,11 @@ const AppMetadataIndexRoute = AppMetadataIndexRouteImport.update({
 const AppDataSourcesIndexRoute = AppDataSourcesIndexRouteImport.update({
   id: '/data-sources/',
   path: '/data-sources/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppToolsParametersRoute = AppToolsParametersRouteImport.update({
+  id: '/tools/parameters',
+  path: '/tools/parameters',
   getParentRoute: () => AppRoute,
 } as any)
 const AppToolsConnectorsRoute = AppToolsConnectorsRouteImport.update({
@@ -153,14 +162,29 @@ const AppMetadataTemplatesRoute = AppMetadataTemplatesRouteImport.update({
   path: '/metadata/templates',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInsightsReviewRoute = AppInsightsReviewRouteImport.update({
+  id: '/insights/review',
+  path: '/insights/review',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInsightsReportsRoute = AppInsightsReportsRouteImport.update({
   id: '/insights/reports',
   path: '/insights/reports',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInsightsQaqcRoute = AppInsightsQaqcRouteImport.update({
+  id: '/insights/qaqc',
+  path: '/insights/qaqc',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInsightsDashboardsRoute = AppInsightsDashboardsRouteImport.update({
   id: '/insights/dashboards',
   path: '/insights/dashboards',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInsightsComplianceRoute = AppInsightsComplianceRouteImport.update({
+  id: '/insights/compliance',
+  path: '/insights/compliance',
   getParentRoute: () => AppRoute,
 } as any)
 const AppInsightsAnalyticsRoute = AppInsightsAnalyticsRouteImport.update({
@@ -256,8 +280,11 @@ export interface FileRoutesByFullPath {
   '/entities/entity': typeof AppEntitiesEntityRoute
   '/entities/representatives': typeof AppEntitiesRepresentativesRoute
   '/insights/analytics': typeof AppInsightsAnalyticsRoute
+  '/insights/compliance': typeof AppInsightsComplianceRoute
   '/insights/dashboards': typeof AppInsightsDashboardsRoute
+  '/insights/qaqc': typeof AppInsightsQaqcRoute
   '/insights/reports': typeof AppInsightsReportsRoute
+  '/insights/review': typeof AppInsightsReviewRoute
   '/metadata/templates': typeof AppMetadataTemplatesRoute
   '/metadata/validation': typeof AppMetadataValidationRoute
   '/operations/create-schedule': typeof AppOperationsCreateScheduleRoute
@@ -273,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/tools/api': typeof AppToolsApiRoute
   '/tools/automation': typeof AppToolsAutomationRoute
   '/tools/connectors': typeof AppToolsConnectorsRoute
+  '/tools/parameters': typeof AppToolsParametersRoute
   '/data-sources/': typeof AppDataSourcesIndexRoute
   '/metadata/': typeof AppMetadataIndexRoute
 }
@@ -294,8 +322,11 @@ export interface FileRoutesByTo {
   '/entities/entity': typeof AppEntitiesEntityRoute
   '/entities/representatives': typeof AppEntitiesRepresentativesRoute
   '/insights/analytics': typeof AppInsightsAnalyticsRoute
+  '/insights/compliance': typeof AppInsightsComplianceRoute
   '/insights/dashboards': typeof AppInsightsDashboardsRoute
+  '/insights/qaqc': typeof AppInsightsQaqcRoute
   '/insights/reports': typeof AppInsightsReportsRoute
+  '/insights/review': typeof AppInsightsReviewRoute
   '/metadata/templates': typeof AppMetadataTemplatesRoute
   '/metadata/validation': typeof AppMetadataValidationRoute
   '/operations/create-schedule': typeof AppOperationsCreateScheduleRoute
@@ -311,6 +342,7 @@ export interface FileRoutesByTo {
   '/tools/api': typeof AppToolsApiRoute
   '/tools/automation': typeof AppToolsAutomationRoute
   '/tools/connectors': typeof AppToolsConnectorsRoute
+  '/tools/parameters': typeof AppToolsParametersRoute
   '/data-sources': typeof AppDataSourcesIndexRoute
   '/metadata': typeof AppMetadataIndexRoute
 }
@@ -334,8 +366,11 @@ export interface FileRoutesById {
   '/_app/entities/entity': typeof AppEntitiesEntityRoute
   '/_app/entities/representatives': typeof AppEntitiesRepresentativesRoute
   '/_app/insights/analytics': typeof AppInsightsAnalyticsRoute
+  '/_app/insights/compliance': typeof AppInsightsComplianceRoute
   '/_app/insights/dashboards': typeof AppInsightsDashboardsRoute
+  '/_app/insights/qaqc': typeof AppInsightsQaqcRoute
   '/_app/insights/reports': typeof AppInsightsReportsRoute
+  '/_app/insights/review': typeof AppInsightsReviewRoute
   '/_app/metadata/templates': typeof AppMetadataTemplatesRoute
   '/_app/metadata/validation': typeof AppMetadataValidationRoute
   '/_app/operations/create-schedule': typeof AppOperationsCreateScheduleRoute
@@ -351,6 +386,7 @@ export interface FileRoutesById {
   '/_app/tools/api': typeof AppToolsApiRoute
   '/_app/tools/automation': typeof AppToolsAutomationRoute
   '/_app/tools/connectors': typeof AppToolsConnectorsRoute
+  '/_app/tools/parameters': typeof AppToolsParametersRoute
   '/_app/data-sources/': typeof AppDataSourcesIndexRoute
   '/_app/metadata/': typeof AppMetadataIndexRoute
 }
@@ -374,8 +410,11 @@ export interface FileRouteTypes {
     | '/entities/entity'
     | '/entities/representatives'
     | '/insights/analytics'
+    | '/insights/compliance'
     | '/insights/dashboards'
+    | '/insights/qaqc'
     | '/insights/reports'
+    | '/insights/review'
     | '/metadata/templates'
     | '/metadata/validation'
     | '/operations/create-schedule'
@@ -391,6 +430,7 @@ export interface FileRouteTypes {
     | '/tools/api'
     | '/tools/automation'
     | '/tools/connectors'
+    | '/tools/parameters'
     | '/data-sources/'
     | '/metadata/'
   fileRoutesByTo: FileRoutesByTo
@@ -412,8 +452,11 @@ export interface FileRouteTypes {
     | '/entities/entity'
     | '/entities/representatives'
     | '/insights/analytics'
+    | '/insights/compliance'
     | '/insights/dashboards'
+    | '/insights/qaqc'
     | '/insights/reports'
+    | '/insights/review'
     | '/metadata/templates'
     | '/metadata/validation'
     | '/operations/create-schedule'
@@ -429,6 +472,7 @@ export interface FileRouteTypes {
     | '/tools/api'
     | '/tools/automation'
     | '/tools/connectors'
+    | '/tools/parameters'
     | '/data-sources'
     | '/metadata'
   id:
@@ -451,8 +495,11 @@ export interface FileRouteTypes {
     | '/_app/entities/entity'
     | '/_app/entities/representatives'
     | '/_app/insights/analytics'
+    | '/_app/insights/compliance'
     | '/_app/insights/dashboards'
+    | '/_app/insights/qaqc'
     | '/_app/insights/reports'
+    | '/_app/insights/review'
     | '/_app/metadata/templates'
     | '/_app/metadata/validation'
     | '/_app/operations/create-schedule'
@@ -468,6 +515,7 @@ export interface FileRouteTypes {
     | '/_app/tools/api'
     | '/_app/tools/automation'
     | '/_app/tools/connectors'
+    | '/_app/tools/parameters'
     | '/_app/data-sources/'
     | '/_app/metadata/'
   fileRoutesById: FileRoutesById
@@ -520,6 +568,13 @@ declare module '@tanstack/react-router' {
       path: '/data-sources'
       fullPath: '/data-sources/'
       preLoaderRoute: typeof AppDataSourcesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tools/parameters': {
+      id: '/_app/tools/parameters'
+      path: '/tools/parameters'
+      fullPath: '/tools/parameters'
+      preLoaderRoute: typeof AppToolsParametersRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/tools/connectors': {
@@ -627,6 +682,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMetadataTemplatesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/insights/review': {
+      id: '/_app/insights/review'
+      path: '/insights/review'
+      fullPath: '/insights/review'
+      preLoaderRoute: typeof AppInsightsReviewRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/insights/reports': {
       id: '/_app/insights/reports'
       path: '/insights/reports'
@@ -634,11 +696,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInsightsReportsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/insights/qaqc': {
+      id: '/_app/insights/qaqc'
+      path: '/insights/qaqc'
+      fullPath: '/insights/qaqc'
+      preLoaderRoute: typeof AppInsightsQaqcRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/insights/dashboards': {
       id: '/_app/insights/dashboards'
       path: '/insights/dashboards'
       fullPath: '/insights/dashboards'
       preLoaderRoute: typeof AppInsightsDashboardsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/insights/compliance': {
+      id: '/_app/insights/compliance'
+      path: '/insights/compliance'
+      fullPath: '/insights/compliance'
+      preLoaderRoute: typeof AppInsightsComplianceRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/insights/analytics': {
@@ -758,8 +834,11 @@ interface AppRouteChildren {
   AppEntitiesEntityRoute: typeof AppEntitiesEntityRoute
   AppEntitiesRepresentativesRoute: typeof AppEntitiesRepresentativesRoute
   AppInsightsAnalyticsRoute: typeof AppInsightsAnalyticsRoute
+  AppInsightsComplianceRoute: typeof AppInsightsComplianceRoute
   AppInsightsDashboardsRoute: typeof AppInsightsDashboardsRoute
+  AppInsightsQaqcRoute: typeof AppInsightsQaqcRoute
   AppInsightsReportsRoute: typeof AppInsightsReportsRoute
+  AppInsightsReviewRoute: typeof AppInsightsReviewRoute
   AppMetadataTemplatesRoute: typeof AppMetadataTemplatesRoute
   AppMetadataValidationRoute: typeof AppMetadataValidationRoute
   AppOperationsCreateScheduleRoute: typeof AppOperationsCreateScheduleRoute
@@ -775,6 +854,7 @@ interface AppRouteChildren {
   AppToolsApiRoute: typeof AppToolsApiRoute
   AppToolsAutomationRoute: typeof AppToolsAutomationRoute
   AppToolsConnectorsRoute: typeof AppToolsConnectorsRoute
+  AppToolsParametersRoute: typeof AppToolsParametersRoute
   AppDataSourcesIndexRoute: typeof AppDataSourcesIndexRoute
   AppMetadataIndexRoute: typeof AppMetadataIndexRoute
 }
@@ -795,8 +875,11 @@ const AppRouteChildren: AppRouteChildren = {
   AppEntitiesEntityRoute: AppEntitiesEntityRoute,
   AppEntitiesRepresentativesRoute: AppEntitiesRepresentativesRoute,
   AppInsightsAnalyticsRoute: AppInsightsAnalyticsRoute,
+  AppInsightsComplianceRoute: AppInsightsComplianceRoute,
   AppInsightsDashboardsRoute: AppInsightsDashboardsRoute,
+  AppInsightsQaqcRoute: AppInsightsQaqcRoute,
   AppInsightsReportsRoute: AppInsightsReportsRoute,
+  AppInsightsReviewRoute: AppInsightsReviewRoute,
   AppMetadataTemplatesRoute: AppMetadataTemplatesRoute,
   AppMetadataValidationRoute: AppMetadataValidationRoute,
   AppOperationsCreateScheduleRoute: AppOperationsCreateScheduleRoute,
@@ -812,6 +895,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppToolsApiRoute: AppToolsApiRoute,
   AppToolsAutomationRoute: AppToolsAutomationRoute,
   AppToolsConnectorsRoute: AppToolsConnectorsRoute,
+  AppToolsParametersRoute: AppToolsParametersRoute,
   AppDataSourcesIndexRoute: AppDataSourcesIndexRoute,
   AppMetadataIndexRoute: AppMetadataIndexRoute,
 }

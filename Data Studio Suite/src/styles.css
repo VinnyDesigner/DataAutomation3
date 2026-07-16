@@ -448,10 +448,10 @@
   font-weight: 700;
 }
 @utility text-h1 {
-  font-size: 36px;
-  line-height: 1.1;
+  font-size: 26px;
+  line-height: 1.15;
   letter-spacing: -0.025em;
-  font-weight: 700;
+  font-weight: 600;
 }
 @utility text-h2 {
   font-size: 30px;

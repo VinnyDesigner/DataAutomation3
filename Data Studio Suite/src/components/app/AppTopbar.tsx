@@ -57,7 +57,7 @@ export function AppTopbar() {
 
       {/* Title & Status */}
       <div className="flex items-center gap-3 shrink-0">
-        <span className="text-[20px] xs:text-[22px] sm:text-[24px] md:text-[25px] lg:text-[26px] font-extrabold tracking-tight text-foreground">
+        <span className="text-[22px] xs:text-[24px] sm:text-[26px] md:text-[27px] lg:text-[28px] font-black tracking-tight text-foreground">
           Data Automation Studio
         </span>
         <div className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success ring-1 ring-inset ring-success/20">

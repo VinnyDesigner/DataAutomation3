@@ -42,6 +42,139 @@ export const Route = createFileRoute("/login")({
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
 
+function AnimatedLogo() {
+  return (
+    <motion.svg
+      width="64"
+      height="64"
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="shrink-0 xl:w-[76px] xl:h-[76px] 2xl:w-[96px] 2xl:h-[96px] drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
+      <defs>
+        {/* Glow filter */}
+        <filter id="neon-glow" x="-25%" y="-25%" width="150%" height="150%">
+          <feGaussianBlur stdDeviation="2.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        {/* Gradients */}
+        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#38bdf8" />
+          <stop offset="60%" stopColor="#3b82f6" />
+          <stop offset="100%" stopColor="#6366f1" />
+        </linearGradient>
+      </defs>
+
+      {/* Main D shape outline */}
+      <motion.path
+        d="M 38 18 L 62 18 A 32 32 0 0 1 62 82 L 38 82 A 7 7 0 0 1 38 68 L 58 68 A 18 18 0 0 0 58 32 L 38 32 A 7 7 0 0 1 38 18 Z"
+        fill="url(#logo-grad)"
+        filter="url(#neon-glow)"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.5, ease: "easeInOut" }}
+      />
+
+      {/* Circuit Trace lines inside the D loop - Base paths */}
+      <path
+        d="M 16 38 L 28 38 L 38 48 L 52 48"
+        stroke="#38bdf8"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        opacity="0.25"
+      />
+      <path
+        d="M 10 50 L 52 50"
+        stroke="#60a5fa"
+        strokeWidth="4"
+        strokeLinecap="round"
+        opacity="0.25"
+      />
+      <path
+        d="M 16 62 L 28 62 L 38 52 L 52 52"
+        stroke="#818cf8"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        opacity="0.25"
+      />
+
+      {/* Circuit Trace lines inside the D loop - Pulsing flow overlay paths */}
+      {/* Top Trace Pulse */}
+      <motion.path
+        d="M 16 38 L 28 38 L 38 48 L 52 48"
+        stroke="#38bdf8"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        filter="url(#neon-glow)"
+        strokeDasharray="10 30"
+        animate={{ strokeDashoffset: [0, -40] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+      />
+      {/* Top Node */}
+      <motion.circle
+        cx="16"
+        cy="38"
+        r="4"
+        fill="#38bdf8"
+        filter="url(#neon-glow)"
+        animate={{ scale: [1, 1.35, 1], opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Middle Trace Pulse */}
+      <motion.path
+        d="M 10 50 L 52 50"
+        stroke="#60a5fa"
+        strokeWidth="4"
+        strokeLinecap="round"
+        filter="url(#neon-glow)"
+        strokeDasharray="12 30"
+        animate={{ strokeDashoffset: [0, -42] }}
+        transition={{ duration: 1.6, repeat: Infinity, ease: "linear" }}
+      />
+      {/* Middle Node */}
+      <motion.circle
+        cx="10"
+        cy="50"
+        r="5.5"
+        fill="#60a5fa"
+        filter="url(#neon-glow)"
+        animate={{ scale: [1, 1.4, 1], opacity: [0.8, 1, 0.8] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+      />
+
+      {/* Bottom Trace Pulse */}
+      <motion.path
+        d="M 16 62 L 28 62 L 38 52 L 52 52"
+        stroke="#818cf8"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        filter="url(#neon-glow)"
+        strokeDasharray="10 30"
+        animate={{ strokeDashoffset: [0, -40] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "linear", delay: 0.2 }}
+      />
+      {/* Bottom Node */}
+      <motion.circle
+        cx="16"
+        cy="62"
+        r="4"
+        fill="#818cf8"
+        filter="url(#neon-glow)"
+        animate={{ scale: [1, 1.35, 1], opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+      />
+    </motion.svg>
+  );
+}
+
 function Login() {
   const [show, setShow] = useState(false);
   const [caps, setCaps] = useState(false);
@@ -91,15 +224,32 @@ function Login() {
         <div className="grid flex-1 grid-cols-1 items-center justify-items-center gap-8 py-4 lg:grid-cols-[1fr_auto_1fr] lg:gap-8 xl:gap-12 2xl:gap-16 lg:justify-items-stretch login-body-grid">
 
           {/* -------------------- LEFT / Hero copy -------------------- */}
-          <div className="relative order-1 flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-[480px] xl:max-w-[600px] 2xl:max-w-[740px] login-hero-wrapper">
-            <motion.div
-              initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.8 }}
-              className="text-[24px] min-[400px]:text-[28px] sm:text-[34px] md:text-[38px] lg:text-[28px] xl:text-[42px] 2xl:text-[56px] font-bold leading-[1.02] tracking-[-0.02em] text-foreground login-hero-heading"
-            >
-              Data Automation<span className="lg:inline hidden"> </span><br className="lg:hidden" />Studio
-            </motion.div>
+          <div className="relative order-1 flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-[480px] xl:max-w-[760px] 2xl:max-w-[900px] login-hero-wrapper">
+            <div className="relative w-full flex items-center gap-4 sm:gap-5 login-logo-title-group">
+              {/* Premium Glow Highlight Effect behind title */}
+              <div className="absolute -left-12 -top-12 -right-12 -bottom-12 pointer-events-none bg-gradient-to-r from-primary/25 via-accent/15 to-info/20 blur-3xl opacity-75 rounded-full" />
+              
+              <AnimatedLogo />
+
+              <motion.div
+                initial={{ opacity: 0, x: -12, filter: "blur(6px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                whileHover={{ 
+                  scale: 1.03, 
+                  x: 6, 
+                  filter: "drop-shadow(0 4px 20px rgba(56,189,248,0.5))"
+                }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 250, 
+                  damping: 18,
+                  x: { duration: 0.3 }
+                }}
+                className="relative text-[24px] min-[400px]:text-[28px] sm:text-[34px] md:text-[38px] lg:text-[28px] xl:text-[40px] 2xl:text-[52px] font-extrabold leading-[1.02] tracking-[-0.02em] bg-gradient-to-r from-white via-slate-100 to-sky-300 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(56,189,248,0.25)] login-hero-heading cursor-default select-none"
+              >
+                <span className="whitespace-nowrap">Data Automation</span><br className="xl:hidden" /> Studio
+              </motion.div>
+            </div>
 
             <motion.div
               initial={{ opacity: 0, y: 10 }}

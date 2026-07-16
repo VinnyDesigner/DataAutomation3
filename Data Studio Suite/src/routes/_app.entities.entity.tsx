@@ -5,6 +5,14 @@ import { PageHeader } from "@/components/app/PageHeader";
 import { Surface } from "@/components/app/Surface";
 import { TablePagination } from "@/components/app/TablePagination";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 export const Route = createFileRoute("/_app/entities/entity")({
   head: () => ({
     meta: [
@@ -36,9 +44,11 @@ function codeTone(c: string) {
 
 function EntitiesPage() {
   const [query, setQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all-types");
 
   const filteredRows = useMemo(() => {
     return rows.filter((r) => {
+      if (typeFilter !== "all-types" && r.type !== typeFilter) return false;
       if (query) {
         const q = query.toLowerCase();
         if (
@@ -51,7 +61,7 @@ function EntitiesPage() {
       }
       return true;
     });
-  }, [query]);
+  }, [query, typeFilter]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -59,7 +69,7 @@ function EntitiesPage() {
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [query]);
+  }, [query, typeFilter]);
 
   const paginatedRows = useMemo(() => {
     return filteredRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -88,15 +98,24 @@ function EntitiesPage() {
             />
           </div>
           <div className="flex items-center gap-2">
-            <button className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-2 text-[15px] text-foreground/80 hover:border-accent/40">
-              <Filter className="h-3.5 w-3.5" /> All Types
-            </button>
-            <button className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-2 text-[15px] text-foreground/80 hover:border-accent/40">
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="h-9 w-auto min-w-[130px] border-border/60 bg-card/50 text-[14px] text-foreground/80 hover:bg-card/85 font-medium cursor-pointer">
+                <SelectValue placeholder="All Types" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border/60">
+                <SelectItem value="all-types" className="cursor-pointer text-[14.5px]">All Types</SelectItem>
+                <SelectItem value="Semi-Government" className="cursor-pointer text-[14.5px]">Semi-Government</SelectItem>
+                <SelectItem value="Government" className="cursor-pointer text-[14.5px]">Government</SelectItem>
+                <SelectItem value="State-Owned" className="cursor-pointer text-[14.5px]">State-Owned</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <button className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 text-[14.0px] text-foreground/80 hover:border-accent/40 cursor-pointer">
               <SlidersHorizontal className="h-3.5 w-3.5" /> Columns
             </button>
-            <button className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-2 text-[15px] text-foreground/80 hover:border-accent/40">
+            <button className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 text-[14.0px] text-foreground/80 hover:border-accent/40 cursor-pointer">
               <Download className="h-3.5 w-3.5" /> Export{" "}
-              <span className="rounded-md bg-primary/20 px-1.5 text-[14px] text-accent">{filteredRows.length}</span>
+              <span className="rounded-md bg-primary/20 px-1.5 text-[13.0px] text-accent font-bold">{filteredRows.length}</span>
             </button>
           </div>
         </div>

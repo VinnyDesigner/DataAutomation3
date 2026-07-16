@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import {
   SlidersHorizontal,
@@ -8,13 +8,11 @@ import {
   AlertTriangle,
   Clock,
   Database,
-  ArrowUpRight,
+  ClipboardCheck,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
 import {
-  Area,
-  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
@@ -40,247 +38,244 @@ import {
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_app/insights/dashboards")({
+export const Route = createFileRoute("/_app/insights/review")({
   head: () => ({
     meta: [
-      { title: "Layer Freshness — Data Automation Studio" },
-      { name: "description", content: "Monitor how recently data layers have been updated." },
+      { title: "Data Review Assessment — Data Automation Studio" },
+      { name: "description", content: "Validation results from the Data Quality Engine." },
     ],
   }),
-  component: LayerFreshnessPage,
+  component: DataReviewPage,
 });
 
-// Mock Layer Freshness records (15 layers)
-const initialLayers = [
+// Mock Validation Results (16 records)
+const initialValidationResults = [
   {
-    id: "layer-1",
-    name: "Road Network — Abu Dhabi Emirate",
-    code: "L-001",
-    type: "Vector",
+    id: "VR-001",
+    layerName: "Road Network — Abu Dhabi Emirate",
     entity: "DMT",
     entityFullName: "Dept. of Municipalities & Transport",
-    stakeholder: "Khalid Al Zaabi",
-    lastUpdate: "2026-03-14",
-    frequency: "Weekly",
-    daysSinceUpdate: 0,
-    status: "Fresh",
+    validationRule: "Topology Consistency Check",
+    errors: 0,
+    warnings: 7,
+    reviewer: "Khalid Al Zaabi",
+    reviewDate: "2026-03-14",
+    status: "Warning",
   },
   {
-    id: "layer-2",
-    name: "Land Use Zoning — Al Ain",
-    code: "L-002",
-    type: "Vector",
+    id: "VR-002",
+    layerName: "Land Use Zoning — Al Ain",
     entity: "ADDA",
     entityFullName: "Abu Dhabi Digital Authority",
-    stakeholder: "Ahmed Al Mansouri",
-    lastUpdate: "2026-03-13",
-    frequency: "Monthly",
-    daysSinceUpdate: 1,
-    status: "Fresh",
+    validationRule: "Coordinate Reference Validation",
+    errors: 0,
+    warnings: 0,
+    reviewer: "Ahmed Al Mansouri",
+    reviewDate: "2026-03-13",
+    status: "Pass",
   },
   {
-    id: "layer-3",
-    name: "Ortho Imagery 2025 — Abu Dhabi",
-    code: "L-003",
-    type: "Ortho",
+    id: "VR-003",
+    layerName: "Ortho Imagery 2025 — Abu Dhabi",
     entity: "DGE",
     entityFullName: "Digital Government Entity",
-    stakeholder: "Yousef Al Marzouqi",
-    lastUpdate: "2026-03-12",
-    frequency: "Yearly",
-    daysSinceUpdate: 2,
-    status: "Fresh",
+    validationRule: "Resolution & Coverage Check",
+    errors: 0,
+    warnings: 1,
+    reviewer: "Yousef Al Marzouqi",
+    reviewDate: "2026-03-12",
+    status: "Pass",
   },
   {
-    id: "layer-4",
-    name: "Air Quality Monitoring Stations",
-    code: "L-004",
-    type: "Vector",
+    id: "VR-004",
+    layerName: "Air Quality Monitoring Stations",
     entity: "EAD",
     entityFullName: "Environment Agency Abu Dhabi",
-    stakeholder: "Noura Al Hamdan",
-    lastUpdate: "2026-03-11",
-    frequency: "Daily",
-    daysSinceUpdate: 3,
-    status: "Fresh",
+    validationRule: "Attribute Completeness Check",
+    errors: 3,
+    warnings: 0,
+    reviewer: "Noura Al Hamdan",
+    reviewDate: "2026-03-11",
+    status: "Fail",
   },
   {
-    id: "layer-5",
-    name: "Distribution Grid Topology",
-    code: "L-005",
-    type: "Vector",
+    id: "VR-005",
+    layerName: "Distribution Grid Topology",
     entity: "ADDC",
-    entityFullName: "Abu Dhabi Distribution Comp...",
-    stakeholder: "Omar Al Kindi",
-    lastUpdate: "2026-03-10",
-    frequency: "Monthly",
-    daysSinceUpdate: 4,
-    status: "Fresh",
+    entityFullName: "Abu Dhabi Distribution Company",
+    validationRule: "Network Connectivity Check",
+    errors: 1,
+    warnings: 4,
+    reviewer: "Omar Al Kindi",
+    reviewDate: "2026-03-10",
+    status: "Fail",
   },
   {
-    id: "layer-6",
-    name: "Healthcare Facilities Register",
-    code: "L-006",
-    type: "Vector",
+    id: "VR-006",
+    layerName: "Terrain DEM — Al Dhafra Region",
+    entity: "EAD",
+    entityFullName: "Environment Agency Abu Dhabi",
+    validationRule: "NoData Threshold Validation",
+    errors: 0,
+    warnings: 3,
+    reviewer: "Mohammed Al Rashidi",
+    reviewDate: "2026-03-09",
+    status: "Warning",
+  },
+  {
+    id: "VR-007",
+    layerName: "Healthcare Facilities Register",
     entity: "ADHA",
     entityFullName: "Abu Dhabi Health Authority",
-    stakeholder: "Fatima Al Hashemi",
-    lastUpdate: "2026-03-08",
-    frequency: "Quarterly",
-    daysSinceUpdate: 6,
-    status: "Fresh",
+    validationRule: "Attribute Completeness Check",
+    errors: 0,
+    warnings: 0,
+    reviewer: "Fatima Al Hashemi",
+    reviewDate: "2026-03-08",
+    status: "Pass",
   },
   {
-    id: "layer-7",
-    name: "Oil & Gas Pipeline Network",
-    code: "L-007",
-    type: "Vector",
+    id: "VR-008",
+    layerName: "Oil & Gas Pipeline Network",
     entity: "ADNOC",
-    entityFullName: "Abu Dhabi National Oil Comp...",
-    stakeholder: "Ahmed Al Mansouri",
-    lastUpdate: "2026-03-07",
-    frequency: "Monthly",
-    daysSinceUpdate: 7,
-    status: "Fresh",
+    entityFullName: "Abu Dhabi National Oil Company",
+    validationRule: "Geometry Validity Check",
+    errors: 2,
+    warnings: 1,
+    reviewer: "Ahmed Al Mansouri",
+    reviewDate: "2026-03-07",
+    status: "Fail",
   },
   {
-    id: "layer-8",
-    name: "Population Census Blocks 2025",
-    code: "L-008",
-    type: "Tabular",
+    id: "VR-009",
+    layerName: "Master Plan Boundaries — Yas Island",
+    entity: "ALDAR",
+    entityFullName: "Aldar Properties",
+    validationRule: "Coordinate Reference Validation",
+    errors: 0,
+    warnings: 0,
+    reviewer: "Sara Al Dhaheri",
+    reviewDate: "2026-03-06",
+    status: "Pass",
+  },
+  {
+    id: "VR-010",
+    layerName: "Population Census Blocks 2025",
     entity: "ADDA",
     entityFullName: "Abu Dhabi Digital Authority",
-    stakeholder: "Khalid Al Zaabi",
-    lastUpdate: "2026-03-05",
-    frequency: "Yearly",
-    daysSinceUpdate: 9,
-    status: "Fresh",
-  },
-  {
-    id: "layer-9",
-    name: "Terrain DEM — Al Dhafra Region",
-    code: "L-009",
-    type: "DEM",
-    entity: "EAD",
-    entityFullName: "Environment Agency Abu Dhabi",
-    stakeholder: "Mohammed Al Rashidi",
-    lastUpdate: "2026-02-28",
-    frequency: "Quarterly",
-    daysSinceUpdate: 14,
+    validationRule: "Schema Compliance Check",
+    errors: 0,
+    warnings: 2,
+    reviewer: "Khalid Al Zaabi",
+    reviewDate: "2026-03-05",
     status: "Warning",
   },
   {
-    id: "layer-10",
-    name: "Protected Natural Areas",
-    code: "L-010",
-    type: "Vector",
+    id: "VR-011",
+    layerName: "Building Permit Boundaries",
+    entity: "DMT",
+    entityFullName: "Dept. of Municipalities & Transport",
+    validationRule: "Topology Consistency Check",
+    errors: 5,
+    warnings: 2,
+    reviewer: "Khalid Al Zaabi",
+    reviewDate: "2026-03-03",
+    status: "Fail",
+  },
+  {
+    id: "VR-012",
+    layerName: "Protected Natural Areas",
     entity: "EAD",
     entityFullName: "Environment Agency Abu Dhabi",
-    stakeholder: "Noura Al Hamdan",
-    lastUpdate: "2026-02-20",
-    frequency: "Quarterly",
-    daysSinceUpdate: 22,
-    status: "Warning",
+    validationRule: "Attribute Completeness Check",
+    errors: 0,
+    warnings: 0,
+    reviewer: "Noura Al Hamdan",
+    reviewDate: "2026-03-01",
+    status: "Pass",
   },
   {
-    id: "layer-11",
-    name: "Substations Network (Draft)",
-    code: "L-011",
-    type: "Vector",
+    id: "VR-013",
+    layerName: "Substations Network (Draft)",
     entity: "ADDC",
-    entityFullName: "Abu Dhabi Distribution Comp...",
-    stakeholder: "Omar Al Kindi",
-    lastUpdate: "2026-02-10",
-    frequency: "Monthly",
-    daysSinceUpdate: 32,
-    status: "Outdated",
+    entityFullName: "Abu Dhabi Distribution Company",
+    validationRule: "Schema Compliance Check",
+    errors: 4,
+    warnings: 1,
+    reviewer: "Omar Al Kindi",
+    reviewDate: "2026-02-28",
+    status: "Fail",
   },
   {
-    id: "layer-12",
-    name: "Building Permit Boundaries",
-    code: "L-012",
-    type: "Vector",
-    entity: "DMT",
-    entityFullName: "Dept. of Municipalities & Transport",
-    stakeholder: "Khalid Al Zaabi",
-    lastUpdate: "2026-01-15",
-    frequency: "Monthly",
-    daysSinceUpdate: 58,
-    status: "Outdated",
+    id: "VR-014",
+    layerName: "Smart City Sensor Network",
+    entity: "ADDA",
+    entityFullName: "Abu Dhabi Digital Authority",
+    validationRule: "Geometry Validity Check",
+    errors: 0,
+    warnings: 0,
+    reviewer: "Ahmed Al Mansouri",
+    reviewDate: "2026-02-25",
+    status: "Pass",
   },
   {
-    id: "layer-13",
-    name: "Wastewater Network Map",
-    code: "L-013",
-    type: "Vector",
-    entity: "ADDC",
-    entityFullName: "Abu Dhabi Distribution Comp...",
-    stakeholder: "Sara Al Dhaheri",
-    lastUpdate: "2026-01-05",
-    frequency: "Monthly",
-    daysSinceUpdate: 69,
-    status: "Outdated",
+    id: "VR-015",
+    layerName: "Government Service Centres",
+    entity: "DGE",
+    entityFullName: "Digital Government Entity",
+    validationRule: "Attribute Completeness Check",
+    errors: 1,
+    warnings: 0,
+    reviewer: "Yousef Al Marzouqi",
+    reviewDate: "2026-02-20",
+    status: "Fail",
   },
   {
-    id: "layer-14",
-    name: "Industrial Zone Land Use",
-    code: "L-014",
-    type: "Vector",
-    entity: "DMT",
-    entityFullName: "Dept. of Municipalities & Transport",
-    stakeholder: "Mohammed Al Rashidi",
-    lastUpdate: "2025-12-20",
-    frequency: "Quarterly",
-    daysSinceUpdate: 85,
-    status: "Outdated",
-  },
-  {
-    id: "layer-15",
-    name: "Ambulance Coverage Zones",
-    code: "L-015",
-    type: "Vector",
+    id: "VR-016",
+    layerName: "Ambulance Coverage Zones",
     entity: "ADHA",
     entityFullName: "Abu Dhabi Health Authority",
-    stakeholder: "Fatima Al Hashemi",
-    lastUpdate: "2025-12-01",
-    frequency: "Quarterly",
-    daysSinceUpdate: 103,
-    status: "Outdated",
+    validationRule: "Coordinate Reference Validation",
+    errors: 0,
+    warnings: 0,
+    reviewer: "Fatima Al Hashemi",
+    reviewDate: "2026-02-18",
+    status: "Pending",
   },
 ];
 
-// Charts Mock Data
-const freshnessDistribution = [
-  { name: "Fresh", value: 8, color: "#10b981" },
-  { name: "Warning", value: 2, color: "#f59e0b" },
-  { name: "Outdated", value: 5, color: "#ef4444" },
+// Recharts Charts Data
+const passRateData = [
+  { name: "Pass", value: 6, color: "#10b981" },
+  { name: "Warning", value: 3, color: "#f59e0b" },
+  { name: "Fail", value: 6, color: "#ef4444" },
+  { name: "Pending", value: 1, color: "#64748b" },
 ];
 
-const updateTrends = [
-  { month: "Oct '25", updates: 30 },
-  { month: "Nov '25", updates: 48 },
-  { month: "Dec '25", updates: 34 },
-  { month: "Jan '26", updates: 28 },
-  { month: "Feb '26", updates: 42 },
-  { month: "Mar '26", updates: 38 },
+const failingRulesData = [
+  { name: "Topology Consistency", value: 8 },
+  { name: "Attribute Completeness", value: 6 },
+  { name: "Schema Compliance", value: 5 },
+  { name: "Geometry Validity", value: 4 },
+  { name: "Network Connectivity", value: 3 },
+  { name: "NoData Threshold", value: 2 },
 ];
 
-const stakeholderUpdates = [
-  { name: "K. Al Zaabi", value: 11 },
-  { name: "A. Al Mansouri", value: 10 },
-  { name: "Y. Al Marzouqi", value: 9 },
-  { name: "N. Al Hamdan", value: 7 },
-  { name: "O. Al Kindi", value: 6 },
-  { name: "F. Al Hashemi", value: 5 },
-  { name: "M. Al Rashidi", value: 4 },
-  { name: "S. Al Dhaheri", value: 3 },
+const entityIssuesData = [
+  { name: "DMT", Errors: 5, Warnings: 9 },
+  { name: "ADDC", Errors: 5, Warnings: 5 },
+  { name: "FAD", Errors: 0, Warnings: 0 },
+  { name: "ADNOC", Errors: 2, Warnings: 1 },
+  { name: "ADHA", Errors: 0, Warnings: 0 },
+  { name: "ADDA", Errors: 0, Warnings: 2 },
+  { name: "DGE", Errors: 1, Warnings: 1 },
 ];
 
-function LayerFreshnessPage() {
+function DataReviewPage() {
   const { theme } = useTheme();
   const isLight = theme === "light";
 
-  const [layers, setLayers] = useState(initialLayers);
+  const [results, setResults] = useState(initialValidationResults);
   const [showFilters, setShowFilters] = useState(false);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all-status");
@@ -294,40 +289,62 @@ function LayerFreshnessPage() {
     setCurrentPage(1);
   };
 
-  const filteredLayers = useMemo(() => {
-    return layers.filter((l) => {
-      // Filter status
+  const filteredResults = useMemo(() => {
+    return results.filter((r) => {
+      // Status filter
       if (statusFilter !== "all-status") {
-        if (l.status.toLowerCase() !== statusFilter.toLowerCase()) return false;
+        if (r.status.toLowerCase() !== statusFilter.toLowerCase()) return false;
       }
 
       // Search query
       if (query) {
         const q = query.toLowerCase();
         if (
-          !l.name.toLowerCase().includes(q) &&
-          !l.code.toLowerCase().includes(q) &&
-          !l.entity.toLowerCase().includes(q) &&
-          !l.stakeholder.toLowerCase().includes(q) &&
-          !l.frequency.toLowerCase().includes(q)
+          !r.layerName.toLowerCase().includes(q) &&
+          !r.entity.toLowerCase().includes(q) &&
+          !r.reviewer.toLowerCase().includes(q) &&
+          !r.validationRule.toLowerCase().includes(q)
         ) {
           return false;
         }
       }
       return true;
     });
-  }, [layers, query, statusFilter]);
+  }, [results, query, statusFilter]);
 
-  const paginatedLayers = useMemo(() => {
-    return filteredLayers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-  }, [filteredLayers, currentPage, pageSize]);
+  const paginatedResults = useMemo(() => {
+    return filteredResults.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  }, [filteredResults, currentPage, pageSize]);
+
+  // Badge styles
+  const getStatusBadge = (status: string) => {
+    const styles: Record<string, { dark: string; light: string }> = {
+      Pass: {
+        dark: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+        light: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+      },
+      Warning: {
+        dark: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
+        light: "bg-amber-50 text-amber-700 border border-amber-200",
+      },
+      Fail: {
+        dark: "bg-rose-500/10 text-rose-400 border border-rose-500/20",
+        light: "bg-rose-50 text-rose-700 border border-rose-200",
+      },
+      Pending: {
+        dark: "bg-slate-500/10 text-slate-400 border border-slate-500/20",
+        light: "bg-slate-100 text-slate-700 border border-slate-200",
+      },
+    };
+    return styles[status] ? (isLight ? styles[status].light : styles[status].dark) : "";
+  };
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <PageHeader
-        title="Layer Freshness"
-        description="Monitor how recently data layers have been updated and identify outdated or stale datasets."
+        title="Data Review Assessment"
+        description="Validation results from the Data Quality Engine — rule compliance, errors, and review status across all layers."
         actions={
           <button className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3.5 py-2 text-[14px] font-semibold text-foreground hover:bg-card/85 transition cursor-pointer">
             <Download className="h-4 w-4" /> Export
@@ -463,8 +480,8 @@ function LayerFreshnessPage() {
       )}
 
       {/* Freshness Status Ribbon */}
-      <div className="grid gap-3 grid-cols-1 md:grid-cols-3">
-        {/* Freshsummary */}
+      <div className="grid gap-3 grid-cols-2 sm:grid-cols-4">
+        {/* Pass Summary */}
         <div className={cn(
           "rounded-xl border p-4.5 flex items-center gap-3 transition",
           isLight
@@ -478,12 +495,12 @@ function LayerFreshnessPage() {
             <CheckCircle className="h-4.5 w-4.5" />
           </span>
           <div>
-            <div className="text-[20px] font-black leading-none text-foreground">8</div>
-            <div className="text-[13px] text-muted-foreground mt-0.5 font-bold">Fresh Layers</div>
+            <div className="text-[20px] font-black leading-none text-foreground">6</div>
+            <div className="text-[13px] text-muted-foreground mt-0.5 font-bold">Pass</div>
           </div>
         </div>
 
-        {/* Warningsummary */}
+        {/* Warning Summary */}
         <div className={cn(
           "rounded-xl border p-4.5 flex items-center gap-3 transition",
           isLight
@@ -497,12 +514,12 @@ function LayerFreshnessPage() {
             <AlertTriangle className="h-4.5 w-4.5" />
           </span>
           <div>
-            <div className="text-[20px] font-black leading-none text-foreground">2</div>
-            <div className="text-[13px] text-muted-foreground mt-0.5 font-bold">Warning Layers</div>
+            <div className="text-[20px] font-black leading-none text-foreground">3</div>
+            <div className="text-[13px] text-muted-foreground mt-0.5 font-bold">Warning</div>
           </div>
         </div>
 
-        {/* Outdatedsummary */}
+        {/* Fail Summary */}
         <div className={cn(
           "rounded-xl border p-4.5 flex items-center gap-3 transition",
           isLight
@@ -513,35 +530,54 @@ function LayerFreshnessPage() {
             "flex h-9 w-9 items-center justify-center rounded-lg ring-1 ring-inset",
             isLight ? "bg-rose-100 ring-rose-200 text-rose-700" : "bg-rose-500/15 ring-rose-500/25 text-rose-400"
           )}>
-            <Clock className="h-4.5 w-4.5" />
+            <AlertTriangle className="h-4.5 w-4.5" />
           </span>
           <div>
-            <div className="text-[20px] font-black leading-none text-foreground">5</div>
-            <div className="text-[13px] text-muted-foreground mt-0.5 font-bold">Outdated Layers</div>
+            <div className="text-[20px] font-black leading-none text-foreground">6</div>
+            <div className="text-[13px] text-muted-foreground mt-0.5 font-bold">Fail</div>
+          </div>
+        </div>
+
+        {/* Pending Summary */}
+        <div className={cn(
+          "rounded-xl border p-4.5 flex items-center gap-3 transition",
+          isLight
+            ? "bg-slate-50 border-slate-200 text-slate-800"
+            : "bg-card/60 border-border/60 text-foreground"
+        )}>
+          <span className={cn(
+            "flex h-9 w-9 items-center justify-center rounded-lg ring-1 ring-inset",
+            isLight ? "bg-slate-100 ring-slate-200 text-slate-600" : "bg-slate-800 ring-slate-700/60 text-slate-400"
+          )}>
+            <Clock className="h-4.5 w-4.5 opacity-60" />
+          </span>
+          <div>
+            <div className="text-[20px] font-black leading-none text-foreground">1</div>
+            <div className="text-[13px] text-muted-foreground mt-0.5 font-bold">Pending</div>
           </div>
         </div>
       </div>
 
       {/* Visualizations row (3 columns) */}
       <div className="grid gap-4 lg:grid-cols-3">
-        {/* Freshness Distribution */}
+        {/* Validation Pass Rate */}
         <Surface>
           <div className="mb-4">
-            <div className="text-h4 text-foreground">Freshness Distribution</div>
-            <div className="text-[13px] text-muted-foreground">Current freshness breakdown of all layers</div>
+            <div className="text-h4 text-foreground">Validation Pass Rate</div>
+            <div className="text-[13px] text-muted-foreground">Overall pass/fail/warning distribution</div>
           </div>
           <div className="flex h-[220px] items-center justify-between gap-1">
             <div className="h-full flex-1 min-w-[110px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={freshnessDistribution}
+                    data={passRateData}
                     innerRadius={50}
                     outerRadius={68}
                     paddingAngle={3}
                     dataKey="value"
                   >
-                    {freshnessDistribution.map((entry, index) => (
+                    {passRateData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -552,11 +588,11 @@ function LayerFreshnessPage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            {/* Legend */}
-            <div className="flex flex-col gap-2 text-[12px] pr-1 shrink-0">
-              {freshnessDistribution.map((d, i) => (
+            {/* Custom Legend */}
+            <div className="flex flex-col gap-1.5 text-[12px] pr-1 shrink-0">
+              {passRateData.map((d, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
+                  <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
                   <span className="font-semibold text-foreground">{d.name}</span>
                   <span className="text-muted-foreground font-mono ml-auto">{d.value}</span>
                 </div>
@@ -565,68 +601,70 @@ function LayerFreshnessPage() {
           </div>
         </Surface>
 
-        {/* Update Trend */}
+        {/* Most Failing Validation Rules */}
         <Surface>
           <div className="mb-4">
-            <div className="text-h4 text-foreground">Update Trend</div>
-            <div className="text-[13px] text-muted-foreground">Monthly layer updates over the last 6 months</div>
+            <div className="text-h4 text-foreground">Most Failing Validation Rules</div>
+            <div className="text-[13px] text-muted-foreground">Failure frequency by rule type</div>
           </div>
           <div className="h-[220px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={updateTrends} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorUpdates" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid stroke="rgba(100,116,139,0.15)" strokeDasharray="3 3" />
-                <XAxis dataKey="month" stroke="var(--muted-foreground)" tick={{ fontSize: 11, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
-                <YAxis domain={[0, 60]} stroke="var(--muted-foreground)" tick={{ fontSize: 11, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
-                <RTooltip
-                  contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 13 }}
-                  labelStyle={{ color: isLight ? "#1e293b" : "#fff" }}
-                  itemStyle={{ color: isLight ? "#1e293b" : "#fff" }}
-                />
-                <Area type="monotone" dataKey="updates" stroke="#7c3aed" strokeWidth={2.2} fillOpacity={1} fill="url(#colorUpdates)" name="Updates" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </Surface>
-
-        {/* Updates by Stakeholder */}
-        <Surface>
-          <div className="mb-4">
-            <div className="text-h4 text-foreground">Updates by Stakeholder</div>
-            <div className="text-[13px] text-muted-foreground">Layer updates submitted this month</div>
-          </div>
-          <div className="h-[220px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={stakeholderUpdates} layout="vertical" margin={{ top: 0, right: 10, left: 10, bottom: 0 }}>
+              <BarChart data={failingRulesData} layout="vertical" margin={{ top: 0, right: 10, left: 15, bottom: 0 }}>
                 <CartesianGrid stroke="rgba(100,116,139,0.15)" strokeDasharray="3 3" horizontal={false} />
                 <XAxis type="number" stroke="var(--muted-foreground)" tick={{ fontSize: 11, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
-                <YAxis dataKey="name" type="category" stroke="var(--muted-foreground)" tick={{ fontSize: 10, fontWeight: 600, fill: "var(--foreground)" }} tickLine={false} axisLine={false} width={80} />
+                <YAxis dataKey="name" type="category" stroke="var(--muted-foreground)" tick={{ fontSize: 9.5, fontWeight: 600, fill: "var(--foreground)" }} tickLine={false} axisLine={false} width={105} />
                 <RTooltip
                   cursor={{ fill: "rgba(100,116,139,0.08)" }}
                   contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 13 }}
                   labelStyle={{ color: isLight ? "#1e293b" : "#fff" }}
                   itemStyle={{ color: isLight ? "#1e293b" : "#fff" }}
                 />
-                <Bar dataKey="value" fill="#10b981" radius={[0, 4, 4, 0]} name="Updates" barSize={8} />
+                <Bar dataKey="value" fill="#ef4444" radius={[0, 4, 4, 0]} name="Failures" barSize={8} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Surface>
+
+        {/* Issues by Entity */}
+        <Surface>
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <div className="text-h4 text-foreground">Issues by Entity</div>
+              <div className="text-[13px] text-muted-foreground">Errors and warnings per entity</div>
+            </div>
+          </div>
+          <div className="h-[220px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={entityIssuesData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                <CartesianGrid stroke="rgba(100,116,139,0.15)" strokeDasharray="3 3" />
+                <XAxis dataKey="name" stroke="var(--muted-foreground)" tick={{ fontSize: 10, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
+                <YAxis stroke="var(--muted-foreground)" tick={{ fontSize: 11, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
+                <RTooltip
+                  cursor={{ fill: "rgba(100,116,139,0.08)" }}
+                  contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 13 }}
+                  labelStyle={{ color: isLight ? "#1e293b" : "#fff" }}
+                  itemStyle={{ color: isLight ? "#1e293b" : "#fff" }}
+                />
+                <Legend iconSize={8} iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+                <Bar dataKey="Errors" fill="#ef4444" radius={[3, 3, 0, 0]} name="Errors" barSize={8} />
+                <Bar dataKey="Warnings" fill="#f59e0b" radius={[3, 3, 0, 0]} name="Warnings" barSize={8} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Surface>
       </div>
 
-      {/* Freshness Register Table */}
+      {/* Validation Results Table */}
       <Surface padded={false}>
         <div className="flex flex-col gap-3 border-b border-border/60 p-4.5 sm:flex-row sm:items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="font-bold text-[16px] text-foreground">Layer Freshness Register</span>
-            <span className="inline-flex items-center rounded-full bg-foreground/10 px-2 py-0.5 text-[11px] font-semibold text-foreground/80">
-              {filteredLayers.length} layers
-            </span>
+            <ClipboardCheck className="h-5 w-5 text-accent shrink-0" />
+            <div>
+              <span className="font-bold text-[16px] text-foreground">Validation Results</span>
+              <span className="ml-2 inline-flex items-center rounded-full bg-foreground/10 px-2 py-0.5 text-[11px] font-semibold text-foreground/80">
+                16 of 16 records
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -639,115 +677,102 @@ function LayerFreshnessPage() {
                   setQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Search layers..."
+                placeholder="Search layers, entitie..."
                 className="w-full sm:w-[220px] rounded-lg border border-border/60 bg-foreground/[0.02] py-1.5 pl-9 pr-3 text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none"
               />
             </div>
+
             <Select value={statusFilter} onValueChange={(val) => {
               setStatusFilter(val);
               setCurrentPage(1);
             }}>
-              <SelectTrigger className="h-8.5 w-[110px] border-border/60 bg-card/60 text-[12.5px] text-foreground/80 hover:bg-card/90 transition-all font-semibold cursor-pointer">
-                <SelectValue placeholder="All" />
+              <SelectTrigger className="h-8.5 w-[120px] border-border/60 bg-card/60 text-[12.5px] text-foreground/80 hover:bg-card/90 transition-all font-semibold cursor-pointer">
+                <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border/60">
-                <SelectItem value="all-status" className="cursor-pointer text-[12.5px]">All</SelectItem>
-                <SelectItem value="fresh" className="cursor-pointer text-[12.5px]">Fresh</SelectItem>
+                <SelectItem value="all-status" className="cursor-pointer text-[12.5px]">All Statuses</SelectItem>
+                <SelectItem value="pass" className="cursor-pointer text-[12.5px]">Pass</SelectItem>
                 <SelectItem value="warning" className="cursor-pointer text-[12.5px]">Warning</SelectItem>
-                <SelectItem value="outdated" className="cursor-pointer text-[12.5px]">Outdated</SelectItem>
+                <SelectItem value="fail" className="cursor-pointer text-[12.5px]">Fail</SelectItem>
+                <SelectItem value="pending" className="cursor-pointer text-[12.5px]">Pending</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
-        {/* Table representation */}
+        {/* Table list */}
         <div className="table-container-scrollable scrollbar-thin">
           <table className="w-full text-left text-[14px]">
             <thead>
               <tr className="border-b border-border/60 bg-foreground/[0.04] text-[12px] font-bold tracking-wide text-muted-foreground/70">
                 <th className="px-5 py-3">LAYER NAME</th>
                 <th className="px-5 py-3">ENTITY</th>
-                <th className="px-5 py-3">STAKEHOLDER</th>
-                <th className="px-5 py-3">LAST UPDATE</th>
-                <th className="px-5 py-3">FREQUENCY</th>
-                <th className="px-5 py-3">DAYS SINCE UPDATE</th>
+                <th className="px-5 py-3">VALIDATION RULE</th>
+                <th className="px-5 py-3">ERRORS</th>
+                <th className="px-5 py-3">WARNINGS</th>
+                <th className="px-5 py-3">REVIEWER</th>
+                <th className="px-5 py-3">REVIEW DATE</th>
                 <th className="px-5 py-3 text-right">STATUS</th>
               </tr>
             </thead>
             <tbody>
-              {paginatedLayers.length === 0 ? (
+              {paginatedResults.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-muted-foreground">
-                    No layer freshness records found.
+                  <td colSpan={8} className="px-5 py-12 text-center text-muted-foreground">
+                    No validation results found.
                   </td>
                 </tr>
               ) : (
-                paginatedLayers.map((l) => (
-                  <tr key={l.id} className="border-b border-border/40 last:border-0 hover:bg-foreground/[0.02]">
+                paginatedResults.map((r) => (
+                  <tr key={r.id} className="border-b border-border/40 last:border-0 hover:bg-foreground/[0.02]">
                     {/* Layer Name & code */}
                     <td className="px-5 py-3.5 align-middle whitespace-nowrap">
                       <div>
-                        <div className="font-semibold text-foreground">{l.name}</div>
+                        <div className="font-semibold text-foreground">{r.layerName}</div>
                         <div className="text-[12px] text-muted-foreground mt-0.5">
-                          {l.code} · {l.type}
+                          {r.id}
                         </div>
                       </div>
                     </td>
 
-                    {/* Entity badge + fullname */}
-                    <td className="px-5 py-3.5 align-middle whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <span className={cn(
-                          "px-2 py-0.5 rounded text-[11px] font-bold border shrink-0",
-                          isLight 
-                            ? "bg-slate-100 text-slate-700 border-slate-200" 
-                            : "bg-slate-800 text-slate-300 border-slate-700/60"
-                        )}>
-                          {l.entity}
-                        </span>
-                        <span className="text-[12.5px] text-muted-foreground truncate max-w-[120px]" title={l.entityFullName}>
-                          {l.entityFullName}
-                        </span>
-                      </div>
+                    {/* Entity text */}
+                    <td className="px-5 py-3.5 align-middle whitespace-nowrap text-[13px] font-bold text-foreground/80">
+                      {r.entity}
                     </td>
 
-                    {/* Stakeholder */}
+                    {/* Validation Rule */}
+                    <td className="px-5 py-3.5 align-middle text-foreground/80 whitespace-nowrap font-medium max-w-[200px] truncate" title={r.validationRule}>
+                      {r.validationRule}
+                    </td>
+
+                    {/* Errors Count */}
+                    <td className="px-5 py-3.5 align-middle whitespace-nowrap text-[13.5px] font-black">
+                      <span className={r.errors > 0 ? "text-rose-500" : "text-muted-foreground/60"}>
+                        {r.errors}
+                      </span>
+                    </td>
+
+                    {/* Warnings Count */}
+                    <td className="px-5 py-3.5 align-middle whitespace-nowrap text-[13.5px] font-black">
+                      <span className={r.warnings > 0 ? "text-amber-500" : "text-muted-foreground/60"}>
+                        {r.warnings}
+                      </span>
+                    </td>
+
+                    {/* Reviewer */}
                     <td className="px-5 py-3.5 align-middle text-foreground/90 whitespace-nowrap">
-                      {l.stakeholder}
+                      {r.reviewer}
                     </td>
 
-                    {/* Last Update */}
+                    {/* Review Date */}
                     <td className="px-5 py-3.5 align-middle font-mono text-[13px] text-foreground/80 whitespace-nowrap">
-                      {l.lastUpdate}
-                    </td>
-
-                    {/* Frequency */}
-                    <td className="px-5 py-3.5 align-middle text-muted-foreground/80 whitespace-nowrap">
-                      {l.frequency}
-                    </td>
-
-                    {/* Days since update */}
-                    <td className="px-5 py-3.5 align-middle whitespace-nowrap">
-                      <div className="flex items-center gap-1.5">
-                        <span className={cn(
-                          "h-2 w-2 rounded-full",
-                          l.status === "Fresh" && "bg-emerald-500",
-                          l.status === "Warning" && "bg-amber-500",
-                          l.status === "Outdated" && "bg-rose-500"
-                        )} />
-                        <span className="font-semibold text-foreground/80">{l.daysSinceUpdate}d</span>
-                      </div>
+                      {r.reviewDate}
                     </td>
 
                     {/* Status Pill */}
                     <td className="px-5 py-3.5 align-middle text-right whitespace-nowrap">
-                      <span className={cn(
-                        "inline-flex items-center rounded-md px-2 py-0.5 text-[12px] font-semibold",
-                        l.status === "Fresh" && (isLight ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"),
-                        l.status === "Warning" && (isLight ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-amber-500/10 text-amber-400 border border-amber-500/20"),
-                        l.status === "Outdated" && (isLight ? "bg-rose-50 text-rose-700 border border-rose-200" : "bg-rose-500/10 text-rose-400 border border-rose-500/20")
-                      )}>
-                        {l.status}
+                      <span className={cn("inline-flex items-center rounded-md px-2.5 py-0.5 text-[12px] font-semibold", getStatusBadge(r.status))}>
+                        {r.status}
                       </span>
                     </td>
                   </tr>
@@ -759,13 +784,13 @@ function LayerFreshnessPage() {
 
         {/* Pagination */}
         <TablePagination
-          totalItems={filteredLayers.length}
+          totalItems={filteredResults.length}
           pageSize={pageSize}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           onPageSizeChange={setPageSize}
-          itemNameSingular="layer"
-          itemNamePlural="layers"
+          itemNameSingular="record"
+          itemNamePlural="records"
         />
       </Surface>
     </div>

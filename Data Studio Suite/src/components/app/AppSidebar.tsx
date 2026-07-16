@@ -115,7 +115,7 @@ export function AppSidebar() {
                                 isLight && active && "text-[#0f172a]",
                               )}
                             >
-                              <Link to={item.url}>
+                              <Link to={item.url} className="flex w-full items-center gap-3">
                                 {active && !isLight && (
                                   <>
                                     <span className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(1px_1px_at_20%_30%,rgba(255,255,255,0.6),transparent_60%),radial-gradient(1px_1px_at_70%_60%,rgba(255,255,255,0.45),transparent_60%),radial-gradient(1px_1px_at_85%_25%,rgba(255,255,255,0.5),transparent_60%),radial-gradient(1px_1px_at_40%_80%,rgba(255,255,255,0.35),transparent_60%)] opacity-70" />
@@ -133,19 +133,22 @@ export function AppSidebar() {
                                     "group-hover/item:brightness-125",
                                   )}
                                 />
-                                <span className="relative min-w-0 flex-1 whitespace-normal break-words leading-tight group-data-[collapsible=icon]:hidden">{item.title}</span>
-                                {item.badge && (
+                                <span className="relative inline-flex items-center pr-1 whitespace-nowrap leading-tight group-data-[collapsible=icon]:hidden">
+                                  {item.title}
+                                  {item.badge === "Live" && (
+                                    <span className="absolute top-0 right-0 flex h-2 w-2">
+                                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+                                      <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
+                                    </span>
+                                  )}
+                                </span>
+                                {item.badge && item.badge !== "Live" && (
                                   <span
                                     className={cn(
                                       "relative ml-auto shrink-0 rounded-md px-1.5 py-0.5 text-[12px] font-semibold ring-1 ring-inset group-data-[collapsible=icon]:hidden",
-                                      item.badge === "Live"
-                                        ? "bg-success/15 text-success ring-success/30"
-                                        : "bg-[var(--sidebar-badge-bg)] text-sidebar-accent-foreground ring-[var(--sidebar-badge-border)]",
+                                      "bg-[var(--sidebar-badge-bg)] text-sidebar-accent-foreground ring-[var(--sidebar-badge-border)]",
                                     )}
                                   >
-                                    {item.badge === "Live" && (
-                                      <span className="mr-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-success align-middle" />
-                                    )}
                                     {item.badge}
                                   </span>
                                 )}

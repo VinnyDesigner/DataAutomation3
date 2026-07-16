@@ -12,11 +12,20 @@ import {
   Search,
   Trash2,
   XCircle,
-  AlertTriangle,
+  Eye,
+  ChevronDown,
 } from "lucide-react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Surface } from "@/components/app/Surface";
 import { TablePagination } from "@/components/app/TablePagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/operations/jobs")({
@@ -29,221 +38,284 @@ export const Route = createFileRoute("/_app/operations/jobs")({
   component: JobsPage,
 });
 
-const stats = [
-  { label: "Total", value: 1, tone: "primary", icon: Briefcase },
-  { label: "Running", value: 1, tone: "info", icon: Activity },
-  { label: "Completed", value: 0, tone: "success", icon: CheckCircle2 },
-  { label: "Warning", value: 0, tone: "warning", icon: AlertTriangle },
-  { label: "Failed", value: 0, tone: "danger", icon: XCircle },
-  { label: "Pending", value: 0, tone: "secondary", icon: Clock },
-] as const;
-
-const flowTabs = ["All", "Primary", "Delta Sync", "Ext DB"];
-const statusTabs = ["All", "Running", "Completed", "Warning", "Failed", "Pending"];
-
-const jobs = [
+// Single row of job matching the screenshot exactly
+const initialJobs = [
   {
-    delivery: "DEMO-WF-1042",
-    subtitle: "#3 · 3 steps",
-    flowType: "Primary Delivery",
-    flowMode: "Continuous",
-    entity: "Abu Dhabi Digital Auth…",
-    entityCode: "ADDA",
+    delivery: "Del-3",
+    subtitle: "3 steps",
+    type: "Data Collection",
+    entity: "ADDA",
     layers: 4,
-    pipeline: ["done", "active", "pending", "pending"],
+    pipeline: ["done", "done", "pending"],
     pipelineLabel: "At: qa-qc",
     status: "Running",
-    progress: 53,
-    submitted: "2026-06-27 22:25",
+    submitted: "27/06/2026, 10:25 PM",
   },
 ];
 
-function toneBg(t: string) {
-  return {
-    primary: "text-accent",
-    info: "text-info",
-    success: "text-success",
-    warning: "text-warning",
-    danger: "text-danger",
-    secondary: "text-[color:var(--secondary-accent)]",
-  }[t] ?? "text-accent";
-}
-
 function JobsPage() {
-  const [flow, setFlow] = useState("All");
-  const [status, setStatus] = useState("All");
-  const [query, setQuery] = useState("");
+  const { theme } = useTheme();
+  const isLight = theme === "light";
 
+  const [jobsList, setJobsList] = useState(initialJobs);
+  const [query, setQuery] = useState("");
+  const [flowFilter, setFlowFilter] = useState("all-flow-types");
+  const [statusFilter, setStatusFilter] = useState("all-statuses");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Filter logic
   const filteredJobs = useMemo(() => {
-    return jobs.filter((j) => {
-      if (flow !== "All" && j.flow !== flow) return false;
-      if (status !== "All" && j.status !== status) return false;
+    return jobsList.filter((j) => {
+      if (flowFilter !== "all-flow-types" && j.type.toLowerCase().replace(" ", "-") !== flowFilter) return false;
+      if (statusFilter !== "all-statuses" && j.status.toLowerCase() !== statusFilter) return false;
       if (query) {
         const q = query.toLowerCase();
         if (
           !j.delivery.toLowerCase().includes(q) &&
-          !j.subtitle.toLowerCase().includes(q) &&
-          !j.entityCode.toLowerCase().includes(q)
+          !j.type.toLowerCase().includes(q) &&
+          !j.entity.toLowerCase().includes(q)
         )
           return false;
       }
       return true;
     });
-  }, [flow, status, query]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  // Reset page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [flow, status, query]);
+  }, [jobsList, query, flowFilter, statusFilter]);
 
   const paginatedJobs = useMemo(() => {
     return filteredJobs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   }, [filteredJobs, currentPage, pageSize]);
+
   return (
     <div className="space-y-6">
+      {/* Page Header */}
       <PageHeader
-
         title="Jobs"
         description="Track, manage and monitor all data processing jobs across all flow types"
       />
 
-      <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-        {stats.map((s) => (
-          <Surface key={s.label} className="!p-4">
-            <div className="flex items-start justify-between">
-              <div className="text-[16px] font-semibold tracking-wide text-muted-foreground">{s.label}</div>
-              <s.icon className={cn("h-4 w-4", toneBg(s.tone))} />
-            </div>
-            <div className={cn("mt-2 text-[32px] font-bold leading-none tracking-tight", toneBg(s.tone))}>{s.value}</div>
-          </Surface>
-        ))}
+      {/* 4 Summary Stats Cards with exact colors from Image 2 */}
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
+        {/* TOTAL */}
+        <div
+          className={cn(
+            "p-4 rounded-xl border flex flex-col justify-between h-[96px] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md",
+            isLight
+              ? "bg-gradient-to-br from-slate-100 via-slate-50 to-indigo-50/50 border-slate-200/90 text-slate-800 hover:border-indigo-300/60 shadow-xs"
+              : "bg-gradient-to-br from-slate-950 via-slate-900/95 to-indigo-950/30 border-border/60 text-foreground hover:border-indigo-500/30"
+          )}
+        >
+          <div className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground/80">Total</div>
+          <div className="text-[32px] font-black leading-none mt-1">1</div>
+        </div>
+
+        {/* RUNNING */}
+        <div
+          className={cn(
+            "p-4 rounded-xl border flex flex-col justify-between h-[96px]",
+            isLight
+              ? "bg-blue-50/70 border-blue-200 text-blue-900"
+              : "bg-blue-500/5 border-blue-500/20 text-blue-400"
+          )}
+        >
+          <div className="text-[12px] font-bold uppercase tracking-wider opacity-85">Running</div>
+          <div className="text-[32px] font-black leading-none mt-1">1</div>
+        </div>
+
+        {/* COMPLETED */}
+        <div
+          className={cn(
+            "p-4 rounded-xl border flex flex-col justify-between h-[96px]",
+            isLight
+              ? "bg-emerald-50/70 border-emerald-200 text-emerald-900"
+              : "bg-emerald-500/5 border-emerald-500/20 text-emerald-400"
+          )}
+        >
+          <div className="text-[12px] font-bold uppercase tracking-wider opacity-85">Completed</div>
+          <div className="text-[32px] font-black leading-none mt-1">0</div>
+        </div>
+
+        {/* FAILED */}
+        <div
+          className={cn(
+            "p-4 rounded-xl border flex flex-col justify-between h-[96px]",
+            isLight
+              ? "bg-rose-50/70 border-rose-200 text-rose-900"
+              : "bg-rose-500/5 border-rose-500/20 text-rose-400"
+          )}
+        >
+          <div className="text-[12px] font-bold uppercase tracking-wider opacity-85">Failed</div>
+          <div className="text-[32px] font-black leading-none mt-1">0</div>
+        </div>
       </div>
 
-      <Surface className="!p-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 min-w-[240px]">
+      {/* Main Table Workspace */}
+      <Surface className="!p-0 overflow-hidden">
+        {/* Filters ribbon matching Image 2 dropdown layout */}
+        <div className="flex flex-wrap items-center gap-3 border-b border-border/60 p-4">
+          <div className="relative flex-grow flex-1 min-w-[240px]">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by code or entity..."
-              className="h-10 w-full rounded-lg border border-border/60 bg-card/50 pl-10 pr-3 text-[14px] text-foreground placeholder:text-muted-foreground focus:border-accent/50 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-border/60 bg-card/50 pl-10 pr-3 text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/40"
             />
           </div>
-          <PillTabs items={flowTabs} value={flow} onChange={setFlow} tone="accent" />
-          <PillTabs items={statusTabs} value={status} onChange={setStatus} tone="accent" />
-          <button className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-card/60 text-muted-foreground transition hover:text-foreground">
+
+          {/* Flow Types Dropdown */}
+          <Select value={flowFilter} onValueChange={setFlowFilter}>
+            <SelectTrigger className="h-9 w-auto min-w-[140px] border-border/60 bg-card/50 text-[13px] text-foreground/80 hover:bg-card/85 font-medium cursor-pointer">
+              <SelectValue placeholder="All Flow Types" />
+            </SelectTrigger>
+            <SelectContent className="bg-popover border-border/60">
+              <SelectItem value="all-flow-types" className="cursor-pointer text-[13px]">All Flow Types</SelectItem>
+              <SelectItem value="data-collection" className="cursor-pointer text-[13px]">Data Collection</SelectItem>
+              <SelectItem value="primary-delivery" className="cursor-pointer text-[13px]">Primary Delivery</SelectItem>
+              <SelectItem value="delta-sync" className="cursor-pointer text-[13px]">Delta Sync</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Statuses Dropdown */}
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="h-9 w-auto min-w-[130px] border-border/60 bg-card/50 text-[13px] text-foreground/80 hover:bg-card/85 font-medium cursor-pointer">
+              <SelectValue placeholder="All Statuses" />
+            </SelectTrigger>
+            <SelectContent className="bg-popover border-border/60">
+              <SelectItem value="all-statuses" className="cursor-pointer text-[13px]">All Statuses</SelectItem>
+              <SelectItem value="running" className="cursor-pointer text-[13px]">Running</SelectItem>
+              <SelectItem value="completed" className="cursor-pointer text-[13px]">Completed</SelectItem>
+              <SelectItem value="failed" className="cursor-pointer text-[13px]">Failed</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Reload action */}
+          <button
+            onClick={() => {
+              setQuery("");
+              setFlowFilter("all-flow-types");
+              setStatusFilter("all-statuses");
+            }}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-card/50 text-muted-foreground hover:text-foreground transition cursor-pointer"
+            title="Reload table"
+          >
             <RefreshCw className="h-4 w-4" />
           </button>
-          <span className="text-[16px] text-muted-foreground">{currentPage} of {Math.max(1, Math.ceil(filteredJobs.length / pageSize))}</span>
-        </div>
-      </Surface>
 
-      <Surface className="!p-0">
+          {/* Record counter indicator */}
+          <span className="text-[12.5px] font-semibold text-muted-foreground ml-auto">
+            1 of 1
+          </span>
+        </div>
+
+        {/* Data Table */}
         <div className="table-container-scrollable scrollbar-thin">
           <table className="w-full text-left text-[14px]">
             <thead>
-              <tr className="border-b border-border/60 bg-foreground/[0.04] text-[12px] font-bold tracking-wide text-muted-foreground/70">
-                <Th className="table-sticky-single-left">Delivery</Th>
-                <Th>Flow Type</Th>
-                <Th>Entity</Th>
-                <Th>Layers</Th>
-                <Th>Pipeline</Th>
-                <Th>Status</Th>
-                <Th>Progress</Th>
-                <Th>Submitted</Th>
-                <Th className="table-sticky-actions">Actions</Th>
+              <tr className="border-b border-border/60 bg-foreground/[0.04] text-[11.5px] font-bold uppercase tracking-wider text-muted-foreground/80">
+                <th className="px-5 py-3.5 table-sticky-single-left">Delivery</th>
+                <th className="px-5 py-3.5">Type</th>
+                <th className="px-5 py-3.5">Entity</th>
+                <th className="px-5 py-3.5">Layers</th>
+                <th className="px-5 py-3.5">Pipeline</th>
+                <th className="px-5 py-3.5">Status</th>
+                <th className="px-5 py-3.5">Submitted</th>
+                <th className="px-5 py-3.5 text-right table-sticky-actions">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {paginatedJobs.map((j) => (
-                <tr key={j.delivery} className="border-b border-border/40 last:border-0 hover:bg-foreground/[0.02]">
-                  <Td className="table-sticky-single-left">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/15 text-accent ring-1 ring-inset ring-accent/25">
-                        <Briefcase className="h-4 w-4" />
-                      </span>
-                      <div>
-                        <div className="font-semibold text-foreground">{j.delivery}</div>
-                        <div className="text-[15px] text-muted-foreground">{j.subtitle}</div>
-                      </div>
-                    </div>
-                  </Td>
-                  <Td>
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-info/15 px-2 py-1 text-[15px] font-medium text-info ring-1 ring-inset ring-info/25">
-                      <GitBranch className="h-3 w-3" /> {j.flowType}
-                    </span>
-                    <div className="mt-1 inline-flex items-center gap-1 text-[15px] text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-success" /> {j.flowMode}
-                    </div>
-                  </Td>
-                  <Td>
-                    <div className="flex items-center gap-2">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/20 text-[15px] font-bold text-accent">AD</span>
-                      <div>
-                        <div className="text-foreground">{j.entity}</div>
-                        <div className="text-[15px] text-muted-foreground">{j.entityCode}</div>
-                      </div>
-                    </div>
-                  </Td>
-                  <Td>
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-foreground/[0.04] px-2 py-1 text-[15px] text-foreground/80 ring-1 ring-inset ring-border/60">
-                      <Layers className="h-3 w-3" /> {j.layers} layers
-                    </span>
-                  </Td>
-                  <Td>
-                    <div className="flex items-center gap-1">
-                      {j.pipeline.map((s, i) => (
-                        <span key={i} className="flex items-center gap-1">
-                          <span className={cn(
-                            "h-2 w-2 rounded-full",
-                            s === "done" && "bg-success",
-                            s === "active" && "bg-info ring-2 ring-info/40",
-                            s === "pending" && "bg-foreground/20",
-                          )} />
-                          {i < j.pipeline.length - 1 && <span className="h-px w-3 bg-foreground/20" />}
+              {paginatedJobs.length > 0 ? (
+                paginatedJobs.map((j) => (
+                  <tr key={j.delivery} className="border-b border-border/40 last:border-0 hover:bg-foreground/[0.02] transition">
+                    {/* Delivery */}
+                    <td className="px-5 py-4 table-sticky-single-left">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 shrink-0">
+                          <Layers className="h-4.5 w-4.5" />
                         </span>
-                      ))}
-                    </div>
-                    <div className="mt-1 text-[15px] text-muted-foreground">{j.pipelineLabel}</div>
-                  </Td>
-                  <Td>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-info/15 px-2.5 py-1 text-[15px] font-medium text-info ring-1 ring-inset ring-info/25">
-                      <span className="relative flex h-2 w-2">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-info opacity-70" />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-info" />
-                      </span>
-                      {j.status}
-                    </span>
-                  </Td>
-                  <Td>
-                    <div className="w-24">
-                      <div className="text-[15px] font-semibold text-foreground">{j.progress}%</div>
-                      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-foreground/10">
-                        <div className="h-full rounded-full bg-linear-to-r from-primary to-accent" style={{ width: `${j.progress}%` }} />
+                        <div>
+                          <div className="font-extrabold text-foreground">{j.delivery}</div>
+                          <div className="text-[11.5px] text-muted-foreground mt-0.5">{j.subtitle}</div>
+                        </div>
                       </div>
-                    </div>
-                  </Td>
-                  <Td>
-                    <span className="font-mono text-[16px] text-foreground/80">{j.submitted}</span>
-                  </Td>
-                  <Td className="table-sticky-actions">
-                    <div className="flex items-center gap-1">
-                      <IconBtn tone="info"><GitBranch className="h-4 w-4" /></IconBtn>
-                      <IconBtn tone="success"><Activity className="h-4 w-4" /></IconBtn>
-                      <IconBtn tone="warning"><Edit3 className="h-4 w-4" /></IconBtn>
-                      <IconBtn tone="danger"><Trash2 className="h-4 w-4" /></IconBtn>
-                    </div>
-                  </Td>
+                    </td>
+
+                    {/* Type */}
+                    <td className="px-5 py-4 text-[13.5px] text-foreground font-semibold">
+                      {j.type}
+                    </td>
+
+                    {/* Entity Acronym */}
+                    <td className="px-5 py-4 text-[13.5px] text-foreground font-bold font-mono">
+                      {j.entity}
+                    </td>
+
+                    {/* Layers Count */}
+                    <td className="px-5 py-4 text-[13.5px] text-foreground font-semibold">
+                      {j.layers}
+                    </td>
+
+                    {/* Pipeline Status Dot Ribbon */}
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-1.5">
+                        {j.pipeline.map((s, i) => (
+                          <span key={i} className="flex items-center gap-1">
+                            <span className={cn(
+                              "h-2 w-2 rounded-full",
+                              s === "done" ? "bg-emerald-500" : "bg-slate-400"
+                            )} />
+                            {i < j.pipeline.length - 1 && <span className="h-px w-2 bg-border/80" />}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="mt-1 text-[11px] font-semibold text-muted-foreground">{j.pipelineLabel}</div>
+                    </td>
+
+                    {/* Status */}
+                    <td className="px-5 py-4">
+                      <span className="text-[13px] font-bold text-blue-500">
+                        {j.status}
+                      </span>
+                    </td>
+
+                    {/* Submitted Timestamp */}
+                    <td className="px-5 py-4 text-[13px] text-muted-foreground font-semibold">
+                      {j.submitted}
+                    </td>
+
+                    {/* Actions formatted perfectly to match Image 2 colors */}
+                    <td className="px-5 py-4 table-sticky-actions text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/15 cursor-pointer">
+                          <Eye className="h-3.5 w-3.5" />
+                        </button>
+                        <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/15 cursor-pointer">
+                          <Edit3 className="h-3.5 w-3.5" />
+                        </button>
+                        <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/15 cursor-pointer">
+                          <RefreshCw className="h-3.5 w-3.5" />
+                        </button>
+                        <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/15 cursor-pointer">
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={8} className="px-5 py-12 text-center text-muted-foreground">
+                    No jobs matching active filters.
+                  </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
+
+        {/* Paginator */}
         <TablePagination
           totalItems={filteredJobs.length}
           pageSize={pageSize}
@@ -254,45 +326,6 @@ function JobsPage() {
           itemNamePlural="jobs"
         />
       </Surface>
-    </div>
-  );
-}
-
-function Th({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <th className={cn("px-5 py-3 text-left", className)}>{children}</th>;
-}
-function Td({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <td className={cn("px-5 py-4 align-middle", className)}>{children}</td>;
-}
-function IconBtn({ children, tone }: { children: React.ReactNode; tone: string }) {
-  return (
-    <button className={cn(
-      "flex h-8 w-8 items-center justify-center rounded-md ring-1 ring-inset transition",
-      tone === "info" && "bg-info/10 text-info ring-info/25 hover:bg-info/20",
-      tone === "success" && "bg-success/10 text-success ring-success/25 hover:bg-success/20",
-      tone === "warning" && "bg-warning/10 text-warning ring-warning/25 hover:bg-warning/20",
-      tone === "danger" && "bg-danger/10 text-danger ring-danger/25 hover:bg-danger/20",
-    )}>{children}</button>
-  );
-}
-
-function PillTabs({ items, value, onChange }: { items: string[]; value: string; onChange: (v: string) => void; tone?: string }) {
-  return (
-    <div className="inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-border/60 bg-card/40 p-1 scrollbar-thin">
-      {items.map((i) => (
-        <button
-          key={i}
-          onClick={() => onChange(i)}
-          className={cn(
-            "rounded-md px-3 py-1.5 text-[16px] font-medium transition",
-            value === i
-              ? "bg-accent/20 text-accent ring-1 ring-inset ring-accent/40"
-              : "text-muted-foreground hover:text-foreground",
-          )}
-        >
-          {i}
-        </button>
-      ))}
     </div>
   );
 }

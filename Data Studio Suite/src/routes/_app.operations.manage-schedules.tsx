@@ -16,10 +16,12 @@ import {
   Search,
   XCircle,
   Zap,
+  Trash2,
 } from "lucide-react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Surface } from "@/components/app/Surface";
 import { TablePagination } from "@/components/app/TablePagination";
+import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/operations/manage-schedules")({
@@ -41,6 +43,8 @@ const metrics = [
 
 const schedules = [
   {
+    id: "SCH-001",
+    status: "Active",
     name: "Test",
     priority: "Medium",
     entity: "ADDA",
@@ -58,6 +62,8 @@ const schedules = [
 const tabs = ["All", "Active", "Inactive"];
 
 function ManageSchedulesPage() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const [tab, setTab] = useState("All");
   const [view, setView] = useState<"grid" | "list">("list");
   const [query, setQuery] = useState("");
@@ -70,8 +76,8 @@ function ManageSchedulesPage() {
         if (
           !s.name.toLowerCase().includes(q) &&
           !s.entity.toLowerCase().includes(q) &&
-          !s.tool.toLowerCase().includes(q) &&
-          !s.id.toLowerCase().includes(q)
+          !s.id.toLowerCase().includes(q) &&
+          !s.flowType.toLowerCase().includes(q)
         )
           return false;
       }
@@ -104,24 +110,31 @@ function ManageSchedulesPage() {
         }
       />
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         {metrics.map((m) => (
-          <Surface key={m.label} className="!p-5">
-            <div className="flex items-start justify-between">
+          <Surface
+            key={m.label}
+            className="!p-3.5 relative overflow-hidden group hover:border-accent/30 transition duration-300 flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between">
               <span className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-xl ring-1 ring-inset",
-                m.tone === "info" && "bg-info/15 text-info ring-info/25",
-                m.tone === "primary" && "bg-primary/15 text-accent ring-primary/25",
-                m.tone === "success" && "bg-success/15 text-success ring-success/25",
-                m.tone === "danger" && "bg-danger/15 text-danger ring-danger/25",
+                "flex h-8 w-8 items-center justify-center rounded-lg ring-1 ring-inset",
+                m.tone === "info" && (isLight ? "bg-info/10 text-info ring-info/20" : "bg-info/10 text-info ring-info/20"),
+                m.tone === "primary" && (isLight ? "bg-primary/10 text-accent ring-primary/20" : "bg-primary/10 text-accent ring-primary/20"),
+                m.tone === "success" && (isLight ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"),
+                m.tone === "danger" && (isLight ? "bg-rose-50 text-rose-700 border-rose-200" : "bg-rose-500/10 text-rose-400 border-rose-500/20"),
               )}>
-                <m.icon className="h-5 w-5" />
+                <m.icon className="h-4 w-4" />
               </span>
-              <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
+              <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity" />
             </div>
-            <div className="mt-3 text-[14px] font-medium text-muted-foreground">{m.label}</div>
-            <div className="mt-1 text-[36px] font-bold leading-none tracking-tight text-foreground">{m.value}</div>
-            <div className="mt-2 text-[16px] text-muted-foreground">{m.hint}</div>
+            <div className="mt-2.5">
+              <div className="text-[12px] font-bold text-muted-foreground/80 leading-none uppercase tracking-wider">{m.label}</div>
+              <div className="mt-1.5 flex items-baseline gap-1.5">
+                <span className="text-[26px] font-black leading-none tracking-tight text-foreground">{m.value}</span>
+                <span className="text-[11px] text-muted-foreground/75 font-semibold leading-none">{m.hint}</span>
+              </div>
+            </div>
           </Surface>
         ))}
       </div>
@@ -219,6 +232,7 @@ function ManageSchedulesPage() {
                       <IconBtn tone="success"><Zap className="h-4 w-4" /></IconBtn>
                       <IconBtn tone="info"><Eye className="h-4 w-4" /></IconBtn>
                       <IconBtn tone="primary"><Edit3 className="h-4 w-4" /></IconBtn>
+                      <IconBtn tone="danger"><Trash2 className="h-4 w-4" /></IconBtn>
                     </div>
                   </td>
                 </tr>
@@ -257,6 +271,7 @@ function IconBtn({ children, tone }: { children: React.ReactNode; tone: string }
       tone === "success" && "bg-success/10 text-success ring-success/25 hover:bg-success/20",
       tone === "warning" && "bg-warning/10 text-warning ring-warning/25 hover:bg-warning/20",
       tone === "primary" && "bg-primary/10 text-accent ring-primary/25 hover:bg-primary/20",
+      tone === "danger" && "bg-danger/10 text-danger ring-danger/25 hover:bg-danger/20",
     )}>{children}</button>
   );
 }

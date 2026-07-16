@@ -83,7 +83,7 @@ export const navGroups: NavGroup[] = [
     label: "Data Management",
     color: "cyan",
     items: [
-      { title: "Jobs", url: "/operations/jobs", icon: Briefcase, badge: "5" },
+      { title: "Jobs", url: "/operations/jobs", icon: Briefcase },
       { title: "Data Layers", url: "/data-management/layers", icon: Layers },
     ],
   },
@@ -102,7 +102,6 @@ export const navGroups: NavGroup[] = [
     items: [
       { title: "Dashboard", url: "/metadata", icon: BarChart3 },
       { title: "Registry", url: "/metadata/templates", icon: FileText },
-      { title: "Templates", url: "/metadata/validation", icon: SlidersHorizontal },
     ],
   },
   {
@@ -131,7 +130,7 @@ export const navGroups: NavGroup[] = [
     color: "lime",
     items: [
       { title: "Automation Tools", url: "/tools/automation", icon: Wrench },
-      { title: "Tool Parameters", url: "/tools/connectors", icon: SlidersHorizontal },
+      { title: "Tool Parameters", url: "/tools/parameters", icon: SlidersHorizontal },
     ],
   },
   {
