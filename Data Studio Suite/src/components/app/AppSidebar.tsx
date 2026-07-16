@@ -103,7 +103,7 @@ export function AppSidebar() {
                               isActive={active}
                               tooltip={item.title}
                               className={cn(
-                                "group/item relative h-auto min-h-11 overflow-hidden rounded-xl px-3.5 py-2 text-[16px] font-medium text-white transition-all",
+                                "group/item relative h-auto min-h-11 overflow-hidden rounded-xl px-3 py-2 text-[15px] font-medium text-white transition-all",
                                 "group-data-[collapsible=icon]:!min-h-10 group-data-[collapsible=icon]:!h-10 group-data-[collapsible=icon]:!w-10 group-data-[collapsible=icon]:!px-0 group-data-[collapsible=icon]:!py-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:!gap-0",
                                 "hover:bg-[var(--sidebar-hover)] hover:text-white",
                                 !isLight && "data-[active=true]:!bg-[radial-gradient(120%_140%_at_50%_50%,rgba(37,99,235,0.22)_0%,rgba(37,99,235,0.08)_55%,var(--sidebar-active-edge)_100%)]",
@@ -133,10 +133,10 @@ export function AppSidebar() {
                                     "group-hover/item:brightness-125",
                                   )}
                                 />
-                                <span className="relative inline-flex items-center pr-1 whitespace-nowrap leading-tight group-data-[collapsible=icon]:hidden">
+                                <span className="relative inline-flex items-center gap-1.5 pr-1 whitespace-nowrap leading-tight group-data-[collapsible=icon]:hidden">
                                   {item.title}
                                   {item.badge === "Live" && (
-                                    <span className="absolute top-0 right-0 flex h-2 w-2">
+                                    <span className="relative flex h-2 w-2 shrink-0">
                                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
                                       <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
                                     </span>
