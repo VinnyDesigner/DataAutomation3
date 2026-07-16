@@ -791,6 +791,24 @@
   top: auto !important;
 }
 
+/* Align Left Hero copy to the very top on desktops */
+@media (min-width: 1024px) {
+  .login-hero-wrapper {
+    align-self: flex-start !important;
+    padding-top: 2rem !important;
+  }
+}
+@media (min-width: 1280px) {
+  .login-hero-wrapper {
+    padding-top: 3rem !important;
+  }
+}
+@media (min-width: 1536px) {
+  .login-hero-wrapper {
+    padding-top: 4rem !important;
+  }
+}
+
 /* Responsive adjustments for 1920px+ viewports (keeps existing layout) */
 @media (min-width: 1920px) {
   .login-body-grid {
