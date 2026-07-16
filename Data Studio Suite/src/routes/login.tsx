@@ -224,7 +224,7 @@ function Login() {
         <div className="grid flex-1 grid-cols-1 items-center justify-items-center gap-8 py-4 lg:grid-cols-[1fr_auto_1fr] lg:gap-8 xl:gap-12 2xl:gap-16 lg:justify-items-stretch login-body-grid">
 
           {/* -------------------- LEFT / Hero copy -------------------- */}
-          <div className="relative order-1 flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-[480px] xl:max-w-[760px] 2xl:max-w-[900px] login-hero-wrapper">
+          <div className="relative order-1 flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-[480px] xl:max-w-[760px] 2xl:max-w-[900px] login-hero-wrapper lg:self-start lg:pt-16 xl:pt-24 2xl:pt-32">
             <div className="relative w-full flex items-center gap-4 sm:gap-5 login-logo-title-group">
               {/* Premium Glow Highlight Effect behind title */}
               <div className="absolute -left-12 -top-12 -right-12 -bottom-12 pointer-events-none bg-gradient-to-r from-primary/25 via-accent/15 to-info/20 blur-3xl opacity-75 rounded-full" />
