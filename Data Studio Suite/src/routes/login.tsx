@@ -225,13 +225,13 @@ function Login() {
 
           {/* -------------------- LEFT / Hero copy -------------------- */}
           <div className="relative order-1 flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-[650px] xl:max-w-[850px] 2xl:max-w-[1000px] login-hero-wrapper">
-            <div className="relative w-full flex items-start gap-4 sm:gap-5 login-logo-title-group">
+            <div className="relative w-full flex items-center gap-4 sm:gap-5 login-logo-title-group">
               {/* Premium Glow Highlight Effect behind title */}
               <div className="absolute -left-12 -top-12 -right-12 -bottom-12 pointer-events-none bg-gradient-to-r from-primary/25 via-accent/15 to-info/20 blur-3xl opacity-75 rounded-full" />
               
               <AnimatedLogo />
 
-              <div className="flex flex-col sm:flex-row sm:items-start lg:items-center gap-3.5 flex-1 min-w-0">
+              <div className="flex flex-row items-start gap-3.5 flex-1 min-w-0">
                 <motion.div
                   initial={{ opacity: 0, x: -12, filter: "blur(6px)" }}
                   animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
