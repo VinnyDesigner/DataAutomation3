@@ -211,7 +211,7 @@ const HUB_NODES = [
 
 function CircularHub({ compact = false }: { compact?: boolean }) {
   const size = compact ? 280 : 380;
-  const radius = compact ? 105 : 145;
+  const radius = compact ? 92 : 128;
   const center = size / 2;
 
   return (
@@ -423,7 +423,7 @@ function Login() {
         </motion.header>
 
         {/* Body Grid: 3 columns on desktop for mathematically equal distribution */}
-        <div className="grid flex-1 grid-cols-1 items-center lg:items-stretch justify-items-center gap-6 pt-2 pb-2 lg:pt-2 xl:pt-3 lg:grid-cols-[1.1fr_1.1fr_1.2fr] lg:grid-rows-[auto_1fr] lg:gap-6 xl:gap-8 lg:justify-items-stretch login-body-grid">
+        <div className="grid flex-1 grid-cols-1 items-center lg:items-stretch justify-items-center gap-6 pt-2 pb-6 lg:pt-2 xl:pt-3 lg:pb-8 lg:grid-cols-[1.1fr_1.1fr_1.2fr] lg:grid-rows-[auto_1fr] lg:gap-6 xl:gap-8 lg:justify-items-stretch login-body-grid">
 
           {/* -------------------- HERO COPY (Spans Col 1 & Col 2) -------------------- */}
           <div className="relative order-1 col-span-1 lg:col-start-1 lg:col-span-2 lg:row-start-1 justify-self-start flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-none lg:self-start login-hero-wrapper">
