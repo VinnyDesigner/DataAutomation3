@@ -805,69 +805,127 @@ function AnimatedShield() {
 /* ------------------------------------------------------------------ */
 
 function AmbientBackdrop() {
+  const particles = [
+    { id: 1, left: "8%", top: "15%", size: 3, duration: 18, delay: 0 },
+    { id: 2, left: "25%", top: "45%", size: 2, duration: 22, delay: 1.5 },
+    { id: 3, left: "42%", top: "12%", size: 4, duration: 16, delay: 3 },
+    { id: 4, left: "15%", top: "75%", size: 3, duration: 20, delay: 0.8 },
+    { id: 5, left: "65%", top: "28%", size: 2, duration: 24, delay: 2.2 },
+    { id: 6, left: "82%", top: "18%", size: 3, duration: 19, delay: 1.1 },
+    { id: 7, left: "55%", top: "68%", size: 4, duration: 21, delay: 4 },
+    { id: 8, left: "73%", top: "82%", size: 2, duration: 25, delay: 0.5 },
+    { id: 9, left: "88%", top: "62%", size: 3, duration: 17, delay: 2.7 },
+    { id: 10, left: "33%", top: "88%", size: 2, duration: 23, delay: 1.9 },
+    { id: 11, left: "48%", top: "40%", size: 3, duration: 20, delay: 3.2 },
+    { id: 12, left: "92%", top: "48%", size: 2, duration: 26, delay: 0.2 },
+  ];
+
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#0a0f1d]">
-      {/* Base wash */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d] via-[#0c1424] to-[#080d1a]" />
+    <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#040813]">
+      {/* 1. Base wash & Depth Layers */}
+      <div className="absolute inset-0 bg-[#040813]" />
+      
+      {/* Vignette overlay */}
+      <div 
+        className="absolute inset-0 opacity-80"
+        style={{
+          backgroundImage: "radial-gradient(circle at 50% 50%, transparent 30%, #02040a 95%)"
+        }}
+      />
 
-      {/* Horizon glow: subtle light source at the horizontal center */}
-      <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75%] h-[35%] bg-gradient-to-r from-primary/15 via-info/20 to-accent/8 blur-[180px] rounded-full pointer-events-none opacity-85" />
+      {/* 2. Soft Light Spots (3-5 spots, large blur, low opacity) */}
+      
+      {/* Spot 1: Cyan behind the workflow illustration (bottom left) */}
+      <motion.div
+        animate={{ 
+          opacity: [0.18, 0.28, 0.18],
+          scale: [1, 1.05, 1],
+          x: [0, 15, 0],
+          y: [0, -10, 0]
+        }}
+        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute left-[8%] bottom-[8%] h-[550px] w-[550px] rounded-full bg-cyan-500/12 blur-[150px]"
+      />
 
-      {/* Flat backdrop grid (subtle) */}
+      {/* Spot 2: Blue at top left edge */}
+      <motion.div
+        animate={{ 
+          opacity: [0.12, 0.20, 0.12],
+          y: [0, 15, 0],
+          x: [0, -10, 0]
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute left-[-5%] top-[-5%] h-[450px] w-[450px] rounded-full bg-blue-600/10 blur-[130px]"
+      />
+
+      {/* Spot 3: Cyan at bottom right edge */}
+      <motion.div
+        animate={{ 
+          opacity: [0.10, 0.18, 0.10],
+          scale: [0.95, 1.05, 0.95]
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute right-[-8%] bottom-[-8%] h-[580px] w-[580px] rounded-full bg-cyan-600/8 blur-[160px]"
+      />
+
+      {/* Spot 4: Indigo at top right edge */}
+      <motion.div
+        animate={{ 
+          opacity: [0.08, 0.15, 0.08],
+          x: [0, -12, 0],
+          y: [0, 15, 0]
+        }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        className="absolute right-[12%] top-[-10%] h-[600px] w-[600px] rounded-full bg-indigo-600/8 blur-[170px]"
+      />
+
+      {/* Spot 5: Central cyan highlight glow behind the Circular Hub */}
+      <motion.div
+        animate={{ 
+          opacity: [0.15, 0.25, 0.15],
+          scale: [1, 1.08, 1]
+        }}
+        transition={{ duration: 17, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+        className="absolute left-[35%] bottom-[10%] h-[500px] w-[500px] rounded-full bg-cyan-500/10 blur-[140px]"
+      />
+
+      {/* 3. Subtle Technical Grid (Opacity 3%-6%, 1px lines, fades to edges) */}
       <div
-        className="absolute inset-0 opacity-[0.04]"
+        className="absolute inset-0 opacity-[0.038]"
         style={{
           backgroundImage:
             "linear-gradient(var(--muted-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--muted-foreground) 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-          maskImage:
-            "radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%)",
+          backgroundSize: "64px 64px",
+          maskImage: "radial-gradient(circle at 50% 50%, black 25%, transparent 75%)",
+          WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 25%, transparent 75%)",
         }}
       />
 
-      {/* 3D Perspective Grid Floor receding into the distance */}
-      <div 
-        className="absolute inset-0 top-[15%] opacity-[0.06]"
-        style={{
-          perspective: "900px",
-        }}
-      >
-        <div 
-          className="w-full h-[150%] origin-top"
+      {/* 4. Ambient Particles (Slow drifting, tiny, low opacity, scattered) */}
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full bg-cyan-400"
           style={{
-            transform: "rotateX(62deg) scale(1.6) translateY(-5%)",
-            backgroundImage:
-              "linear-gradient(var(--muted-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--muted-foreground) 1px, transparent 1px)",
-            backgroundSize: "56px 56px",
-            maskImage: "linear-gradient(to bottom, black 15%, transparent 75%)",
-            WebkitMaskImage: "linear-gradient(to bottom, black 15%, transparent 75%)",
+            left: p.left,
+            top: p.top,
+            width: p.size,
+            height: p.size,
+            boxShadow: "0 0 10px rgba(34,211,238,0.6)",
+          }}
+          animate={{
+            y: [-18, 18, -18],
+            x: [-12, 12, -12],
+            opacity: [0.12, 0.35, 0.12],
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: p.delay,
           }}
         />
-      </div>
-
-      {/* Ambient orbs */}
-      <motion.div
-        animate={{ opacity: [0.5, 0.8, 0.5], x: [0, 15, 0], y: [0, -10, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute left-[5%] top-[12%] h-[460px] w-[460px] rounded-full bg-primary/18 blur-[140px]"
-      />
-      <motion.div
-        animate={{ opacity: [0.45, 0.8, 0.45], y: [0, -18, 0], x: [0, 10, 0] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute right-[5%] top-[18%] h-[480px] w-[480px] rounded-full bg-info/15 blur-[150px]"
-      />
-      <motion.div
-        animate={{ opacity: [0.4, 0.7, 0.4], x: [0, -12, 0], y: [0, 12, 0] }}
-        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[-15%] left-[25%] h-[550px] w-[550px] rounded-full bg-success/12 blur-[160px]"
-      />
-      <motion.div
-        animate={{ opacity: [0.3, 0.6, 0.3], y: [0, 20, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[10%] right-[10%] h-[350px] w-[350px] rounded-full bg-accent/8 blur-[120px]"
-      />
+      ))}
     </div>
   );
 }
