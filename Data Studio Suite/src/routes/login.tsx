@@ -216,11 +216,10 @@ function CircularHub({ compact = false }: { compact?: boolean }) {
 
   return (
     <div
-      className="relative pointer-events-auto transition-transform duration-300 scale-100 xl:scale-105 2xl:scale-115 login-workflow-hub"
-      style={{ width: size, height: size }}
+      className="relative w-full h-full aspect-square pointer-events-auto transition-transform duration-300 login-workflow-hub"
     >
       {/* Concentric mesh rings */}
-      <svg className="absolute inset-0" viewBox={`0 0 ${size} ${size}`}>
+      <svg className="absolute inset-0 w-full h-full" viewBox={`0 0 ${size} ${size}`}>
         <defs>
           <radialGradient id="hub-glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="var(--info)" stopOpacity="0.35" />
@@ -286,7 +285,7 @@ function CircularHub({ compact = false }: { compact?: boolean }) {
         }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-full border border-info/50 bg-background/90 text-info shadow-[0_0_35px_rgba(6,182,212,0.45),inset_0_1px_0_rgba(255,255,255,0.1)]"
-        style={{ width: compact ? 42 : 52, height: compact ? 42 : 52 }}
+        style={{ width: compact ? "15%" : "13.6%", height: compact ? "15%" : "13.6%" }}
       >
         {/* Pulsing outer ring */}
         <motion.span
@@ -294,14 +293,14 @@ function CircularHub({ compact = false }: { compact?: boolean }) {
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           className="absolute inset-0 rounded-full border-2 border-info/35"
         />
-        <Database className={compact ? "h-4.5 w-4.5 animate-pulse" : "h-5.5 w-5.5 animate-pulse"} />
+        <Database className="h-1/2 w-1/2 animate-pulse" />
       </motion.div>
 
       {/* Center Hub Label */}
       <div
         className="absolute left-1/2 -translate-x-1/2 text-center pointer-events-none"
         style={{
-          top: `calc(50% + ${compact ? "30px" : "38px"})`,
+          top: "61%",
         }}
       >
         <span className="text-[8.5px] sm:text-[9.5px] font-semibold tracking-wider uppercase text-info bg-info/10 backdrop-blur-md px-1.5 py-0.5 rounded border border-info/20 shadow-[0_0_12px_rgba(6,182,212,0.15)] whitespace-nowrap">
@@ -317,8 +316,13 @@ function CircularHub({ compact = false }: { compact?: boolean }) {
         return (
           <motion.div 
             key={i} 
-            className="absolute" 
-            style={{ left: x, top: y }}
+            className="absolute -translate-x-1/2 -translate-y-1/2" 
+            style={{ 
+              left: `${(x / size) * 100}%`, 
+              top: `${(y / size) * 100}%`,
+              width: compact ? "13.5%" : "12.1%",
+              height: compact ? "13.5%" : "12.1%",
+            }}
             animate={{
               y: [0, -4, 0],
               x: [0, i % 2 === 0 ? 1.5 : -1.5, 0]
@@ -335,10 +339,8 @@ function CircularHub({ compact = false }: { compact?: boolean }) {
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.15, borderColor: "var(--info)", boxShadow: "0 0 32px -4px var(--info), inset 0 1px 0 rgba(255,255,255,0.15)" }}
               transition={{ duration: 0.4, delay: 0.2 + i * 0.05 }}
-              className="absolute grid place-items-center rounded-full border border-info/30 bg-background/90 text-info backdrop-blur-md hover:text-white transition-colors cursor-pointer -translate-x-1/2 -translate-y-1/2"
+              className="absolute inset-0 grid place-items-center rounded-full border border-info/30 bg-background/90 text-info backdrop-blur-md hover:text-white transition-colors cursor-pointer"
               style={{
-                width: compact ? 38 : 46,
-                height: compact ? 38 : 46,
                 boxShadow: "0 0 24px -6px var(--info), inset 0 1px 0 rgba(255,255,255,0.08)",
               }}
             >
@@ -355,7 +357,7 @@ function CircularHub({ compact = false }: { compact?: boolean }) {
                 }}
                 className="flex items-center justify-center w-full h-full"
               >
-                <n.Icon className={compact ? "h-3.5 w-3.5" : "h-4.5 w-4.5"} />
+                <n.Icon className="h-1/2 w-1/2" />
               </motion.div>
             </motion.div>
             
@@ -364,7 +366,7 @@ function CircularHub({ compact = false }: { compact?: boolean }) {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 + i * 0.05 }}
-              className="absolute top-7 sm:top-8 left-1/2 -translate-x-1/2 text-[8.5px] sm:text-[9px] font-semibold tracking-wider uppercase text-info/95 text-center bg-info/10 backdrop-blur-md px-1.5 py-0.5 rounded border border-info/20 shadow-[0_0_12px_rgba(6,182,212,0.15)] whitespace-nowrap"
+              className="absolute top-[110%] left-1/2 -translate-x-1/2 text-[8.5px] sm:text-[9px] font-semibold tracking-wider uppercase text-info/95 text-center bg-info/10 backdrop-blur-md px-1.5 py-0.5 rounded border border-info/20 shadow-[0_0_12px_rgba(6,182,212,0.15)] whitespace-nowrap"
             >
               {n.label}
             </motion.span>
@@ -421,7 +423,7 @@ function Login() {
         </motion.header>
 
         {/* Body Grid: 3 columns on desktop for mathematically equal distribution */}
-        <div className="grid flex-1 grid-cols-1 items-center lg:items-stretch justify-items-center gap-6 pt-2 pb-2 lg:pt-2 xl:pt-3 lg:grid-cols-[1.1fr_1.1fr_1.2fr] lg:gap-6 xl:gap-8 lg:justify-items-stretch login-body-grid">
+        <div className="grid flex-1 grid-cols-1 items-center lg:items-stretch justify-items-center gap-6 pt-2 pb-2 lg:pt-2 xl:pt-3 lg:grid-cols-[1.1fr_1.1fr_1.2fr] lg:grid-rows-[auto_1fr] lg:gap-6 xl:gap-8 lg:justify-items-stretch login-body-grid">
 
           {/* -------------------- HERO COPY (Spans Col 1 & Col 2) -------------------- */}
           <div className="relative order-1 col-span-1 lg:col-start-1 lg:col-span-2 lg:row-start-1 justify-self-start flex flex-col items-start text-left w-full max-w-[500px] lg:max-w-none lg:self-start login-hero-wrapper">
@@ -488,12 +490,12 @@ function Login() {
           </div>
 
           {/* -------------------- COLUMN 1 BOTTOM / Blended Image -------------------- */}
-          <div className="col-span-1 order-2 lg:col-start-1 lg:row-start-2 flex items-center justify-center lg:justify-start lg:self-end pb-5 overflow-visible">
+          <div className="col-span-1 order-2 lg:col-start-1 lg:row-start-2 flex items-center justify-center lg:justify-start lg:self-start lg:pt-0 pb-5 overflow-visible">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="relative w-full max-w-[384px] aspect-square pointer-events-none select-none overflow-visible"
+              className="relative w-full max-w-[340px] sm:max-w-[360px] lg:max-w-[384px] xl:max-w-[460px] 2xl:max-w-[540px] max-h-[30vh] lg:max-h-[40vh] xl:max-h-[45vh] aspect-square pointer-events-none select-none overflow-visible"
             >
               {/* Radial gradient mask to feather edges into transparency */}
               <div 
@@ -613,14 +615,14 @@ function Login() {
           </div>
 
           {/* -------------------- COLUMN 2 BOTTOM / Interactive Circular Hub -------------------- */}
-          <div className="col-span-1 order-3 lg:col-start-2 lg:row-start-2 flex items-center justify-center lg:justify-center lg:self-end pb-5 overflow-visible">
-            <div className="hidden xl:block">
+          <div className="col-span-1 order-3 lg:col-start-2 lg:row-start-2 flex items-center justify-center lg:justify-center lg:self-start lg:pt-0 pb-5 overflow-visible">
+            <div className="hidden xl:block w-[380px] h-[380px] xl:w-[460px] xl:h-[460px] 2xl:w-[540px] 2xl:h-[540px] max-h-[35vh] xl:max-h-[45vh] aspect-square overflow-visible">
               <CircularHub />
             </div>
-            <div className="hidden sm:block xl:hidden">
+            <div className="hidden sm:block xl:hidden w-[280px] h-[280px] max-h-[30vh] aspect-square overflow-visible">
               <CircularHub compact />
             </div>
-            <div className="sm:hidden">
+            <div className="sm:hidden w-[280px] h-[280px] max-h-[30vh] aspect-square overflow-visible">
               <CircularHub compact />
             </div>
           </div>
