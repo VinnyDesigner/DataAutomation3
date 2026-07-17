@@ -490,7 +490,7 @@ function Login() {
           </div>
 
           {/* -------------------- COLUMN 1 BOTTOM / Blended Image -------------------- */}
-          <div className="hidden lg:flex col-span-1 order-2 lg:col-start-1 lg:row-start-2 items-center justify-center lg:justify-start lg:self-start lg:pt-0 pb-5 overflow-visible">
+          <div className="col-span-1 order-2 lg:col-start-1 lg:row-start-2 flex items-center justify-center lg:justify-start lg:self-start lg:pt-0 pb-5 overflow-visible">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -615,7 +615,7 @@ function Login() {
           </div>
 
           {/* -------------------- COLUMN 2 BOTTOM / Interactive Circular Hub -------------------- */}
-          <div className="hidden lg:flex col-span-1 order-3 lg:col-start-2 lg:row-start-2 items-center justify-center lg:justify-center lg:self-start lg:pt-0 pb-5 overflow-visible">
+          <div className="col-span-1 order-3 lg:col-start-2 lg:row-start-2 flex items-center justify-center lg:justify-center lg:self-start lg:pt-0 pb-5 overflow-visible">
             <div className="hidden xl:block w-full max-w-[380px] xl:max-w-[460px] 2xl:max-w-[540px] max-h-[35vh] xl:max-h-[45vh] aspect-square overflow-visible">
               <CircularHub />
             </div>
