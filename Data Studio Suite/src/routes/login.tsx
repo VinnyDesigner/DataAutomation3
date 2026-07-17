@@ -397,11 +397,11 @@ function Login() {
   };
 
   return (
-    <div className="relative min-h-dvh lg:h-dvh lg:overflow-hidden bg-background text-foreground">
+    <div className="relative min-h-dvh overflow-hidden bg-background text-foreground">
       <AmbientBackdrop />
 
       {/* Centered container — tighter gutters */}
-      <div className="relative z-10 mx-auto flex min-h-dvh lg:h-dvh w-full max-w-none flex-col login-container-strict lg:overflow-hidden">
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-none flex-col login-container-strict">
 
         {/* Top logo bar */}
         <motion.header
