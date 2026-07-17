@@ -493,7 +493,7 @@ function Login() {
             </div>
 
             {/* Illustrations Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full items-center justify-items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full items-center justify-items-stretch login-illustrations-row">
               
               {/* Blended Image */}
               <div className="flex items-center justify-center lg:justify-start lg:pt-0 pb-5 overflow-visible">
@@ -501,7 +501,7 @@ function Login() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.3 }}
-                  className="relative w-full h-full max-w-[340px] sm:max-w-[360px] lg:max-w-[384px] xl:max-w-[460px] 2xl:max-w-[540px] max-h-full aspect-square pointer-events-none select-none overflow-visible"
+                  className="relative w-full h-full max-w-[340px] sm:max-w-[360px] lg:max-w-[384px] xl:max-w-[460px] 2xl:max-w-[540px] max-h-full aspect-square pointer-events-none select-none overflow-visible login-illustration-left"
                 >
                   {/* Radial gradient mask to feather edges into transparency */}
                   <div 
@@ -622,7 +622,7 @@ function Login() {
 
               {/* Circular Hub */}
               <div className="flex items-center justify-center lg:justify-center lg:pt-0 pb-5 overflow-visible">
-                <div className="hidden xl:block w-full h-full max-w-[380px] xl:max-w-[460px] 2xl:max-w-[540px] max-h-full aspect-square overflow-visible">
+                <div className="hidden xl:block w-full h-full max-w-[380px] xl:max-w-[460px] 2xl:max-w-[540px] max-h-full aspect-square overflow-visible login-illustration-right">
                   <CircularHub />
                 </div>
                 <div className="hidden sm:block xl:hidden w-full h-full max-w-[280px] max-h-full aspect-square overflow-visible">

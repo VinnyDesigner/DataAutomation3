@@ -1211,3 +1211,35 @@
   }
 }
 
+/* Size and spacing overrides for illustrations on large desktop screens (>=1440px) */
+@media (min-width: 1440px) {
+  .login-illustrations-row {
+    margin-top: 2rem !important; /* Move illustrations slightly downward */
+  }
+  .login-illustration-left,
+  .login-illustration-right {
+    max-width: 520px !important; /* Increase size on 1440px+ */
+  }
+}
+
+@media (min-width: 1600px) {
+  .login-illustrations-row {
+    margin-top: 3rem !important; /* Move illustrations downward on larger screens */
+  }
+  .login-illustration-left,
+  .login-illustration-right {
+    max-width: 590px !important; /* Increase size on 1600px+ */
+  }
+}
+
+@media (min-width: 1920px) {
+  .login-illustrations-row {
+    margin-top: 4.5rem !important; /* Move illustrations further downward on massive screens */
+  }
+  .login-illustration-left,
+  .login-illustration-right {
+    max-width: 660px !important; /* Increase size on 1920px+ */
+  }
+}
+
+
