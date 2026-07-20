@@ -1293,34 +1293,17 @@
   }
 }
 
-/* Responsive adjustments for smaller desktop screens (width 1024px to 1599px) */
+/* Responsive adjustments for smaller desktop screens (width 1024px to 1919px) */
+@media (min-width: 1024px) and (max-width: 1919px) {
+  .login-illustration-left,
+  .login-illustration-right {
+    max-width: clamp(280px, 28.5vw, 660px) !important; /* Scale proportionally without jumps */
+  }
+}
+
 @media (min-width: 1024px) and (max-width: 1599px) {
   .login-illustrations-row {
-    transform: translateY(-16px) !important; /* Move both illustrations upward to utilize space without colliding with hero text */
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1279px) {
-  .login-illustration-left,
-  .login-illustration-right {
-    max-width: 280px !important;
-  }
-}
-
-@media (min-width: 1280px) and (max-width: 1439px) {
-  .login-illustration-left,
-  .login-illustration-right {
-    max-width: 360px !important;
-  }
-}
-
-@media (min-width: 1440px) and (max-width: 1599px) {
-  .login-illustrations-row {
-    margin-top: 0.5rem !important; /* Bring up slightly */
-  }
-  .login-illustration-left,
-  .login-illustration-right {
-    max-width: 440px !important;
+    transform: translateY(-16px) !important; /* Base translateY upward shift to utilize space */
   }
 }
 
@@ -1363,12 +1346,12 @@
 
 @media (min-width: 1920px) {
   .login-illustrations-row {
-    transform: translateY(40px) !important; /* Move illustrations downward on massive screens to reduce bottom whitespace */
-    margin-top: 4.5rem !important; /* Move illustrations further downward on massive screens */
+    transform: translateY(clamp(40px, 4.5vh, 120px)) !important; /* Moves downward gradually as vertical space becomes available */
+    margin-top: 4.5rem !important;
   }
   .login-illustration-left,
   .login-illustration-right {
-    max-width: 660px !important; /* Increase size on 1920px+ */
+    max-width: clamp(660px, 34.3vw, 960px) !important; /* Scales up proportionally on larger monitors */
   }
 }
 
