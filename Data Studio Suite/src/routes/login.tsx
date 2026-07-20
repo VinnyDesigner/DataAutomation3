@@ -390,6 +390,13 @@ function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading("loading");
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.setItem("das-theme", "light");
+      } catch (err) {
+        console.error(err);
+      }
+    }
     setTimeout(() => {
       setLoading("success");
       setTimeout(() => navigate({ to: "/dashboard" }), 500);
@@ -638,7 +645,7 @@ function Login() {
           </div>
 
           {/* -------------------- COLUMN 3 / Auth card -------------------- */}
-          <div className="col-span-1 order-4 lg:col-start-3 lg:row-start-1 lg:row-span-2 flex items-center justify-center lg:justify-end lg:self-center">
+          <div className="col-span-1 order-4 lg:col-start-3 lg:row-start-1 lg:row-span-2 flex items-center justify-center lg:justify-end lg:self-center w-full login-card-wrapper">
 
             <motion.form
               initial={{ opacity: 0, y: 16, scale: 0.98 }}
